@@ -566,6 +566,7 @@
     box-shadow: none;
   }
   .gerar-btn .material-symbols-outlined { font-size: 18px; }
+  @keyframes spin { to { transform: rotate(360deg); } }
 
   /* ========================================================
      MENU DROPDOWN
@@ -805,6 +806,10 @@
      MENU DROPDOWN
      ============================================================ -->
 <div class="menu-dropdown" id="menu-dropdown">
+  <button onclick="baixarListaLocal()">
+    <span class="material-symbols-outlined">download</span>
+    Baixar JSON local
+  </button>
   <button onclick="zerarQuantidades()">
     <span class="material-symbols-outlined">restart_alt</span>
     Zerar quantidades
@@ -827,9 +832,9 @@
     <div class="total"><strong id="contagem-itens">0</strong> itens na lista</div>
     <div class="estimativa" id="estimativa-total">monte a sua lista</div>
   </div>
-  <button class="gerar-btn" id="gerar-btn" onclick="gerarLista()" disabled>
-    <span>Gerar Lista</span>
-    <span class="material-symbols-outlined">download</span>
+  <button class="gerar-btn" id="gerar-btn" onclick="enviarLista()" disabled>
+    <span id="gerar-btn-texto">Enviar pra Armando</span>
+    <span class="material-symbols-outlined" id="gerar-btn-icon">send</span>
   </button>
 </div>
 
@@ -1411,9 +1416,12 @@ function mostrarSnackbar(msg, icon = "info") {
 }
 
 // ===================================================================
-// GERAR / EXPORTAR
+// ENVIO PRA JSONBIN (Claude lê depois via Master Key)
 // ===================================================================
-function gerarLista() {
+const JSONBIN_ACCESS_KEY = "$2a$10$/7komFl12KCkc/RI7.mXL.oEt/KBzhnTFz/6nJIJTjqv/7XJuM6s2";
+const JSONBIN_COLLECTION_ID = "6a0a45c3c0954111d83b04d3";
+
+function montarPayload() {
   const itens_conhecidos = Object.entries(estado.quantidades)
     .filter(([id, q]) => q > 0)
     .map(([id, q]) => {
@@ -1431,12 +1439,82 @@ function gerarLista() {
     quantidade: n.quantidade,
     observacao: n.obs || ""
   }));
-  const lista = {
+  return {
     gerado_em: new Date().toISOString(),
-    versao: 1,
+    versao: 2,
     itens_conhecidos,
     itens_novos
   };
+}
+
+async function enviarLista() {
+  const btn = document.getElementById("gerar-btn");
+  const texto = document.getElementById("gerar-btn-texto");
+  const icon = document.getElementById("gerar-btn-icon");
+  const original = { texto: texto.textContent, icon: icon.textContent };
+
+  btn.disabled = true;
+  texto.textContent = "Enviando…";
+  icon.textContent = "progress_activity";
+  icon.style.animation = "spin 1s linear infinite";
+
+  const payload = montarPayload();
+  const dt = new Date();
+  const nomeBin = `Lista ${String(dt.getDate()).padStart(2,"0")}-${String(dt.getMonth()+1).padStart(2,"0")} ${String(dt.getHours()).padStart(2,"0")}h${String(dt.getMinutes()).padStart(2,"0")}`;
+
+  try {
+    const resp = await fetch("https://api.jsonbin.io/v3/b", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Access-Key": JSONBIN_ACCESS_KEY,
+        "X-Collection-Id": JSONBIN_COLLECTION_ID,
+        "X-Bin-Name": nomeBin,
+        "X-Bin-Private": "true"
+      },
+      body: JSON.stringify(payload)
+    });
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    const data = await resp.json();
+    const binId = data?.metadata?.id || "?";
+
+    icon.style.animation = "";
+    texto.textContent = "Enviada! ✓";
+    icon.textContent = "check_circle";
+    mostrarSnackbar(`Lista enviada! Avisa o Armando 🎉`, "check_circle");
+
+    // Reset estado pra próxima lista (mantém a UI mas zera quantidades)
+    setTimeout(() => {
+      texto.textContent = original.texto;
+      icon.textContent = original.icon;
+      btn.disabled = false;
+    }, 4000);
+
+    // opcional: limpar lista após sucesso
+    if (confirm("Lista enviada! Quer começar uma lista nova agora?")) {
+      estado = { quantidades: {}, novos: [], categoria_ativa: estado.categoria_ativa };
+      localStorage.removeItem(STORAGE_KEY);
+      document.getElementById("banner-rascunho").classList.remove("visivel");
+      renderizar();
+    }
+  } catch (e) {
+    console.error("Erro ao enviar:", e);
+    icon.style.animation = "";
+    texto.textContent = "Erro — tente de novo";
+    icon.textContent = "error";
+    mostrarSnackbar("Falha ao enviar. Verifica internet e tenta de novo.", "error");
+    setTimeout(() => {
+      texto.textContent = original.texto;
+      icon.textContent = original.icon;
+      btn.disabled = false;
+    }, 3500);
+  }
+}
+
+// Mantém função de download local como backup (não é mais o default).
+// A Gabri pode usar o menu ⋯ pra baixar JSON se quiser cópia local.
+function baixarListaLocal() {
+  const lista = montarPayload();
   const blob = new Blob([JSON.stringify(lista, null, 2)], {type: "application/json"});
   const url = URL.createObjectURL(blob);
   const dt = new Date();
@@ -1448,7 +1526,8 @@ function gerarLista() {
   a.click();
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
-  mostrarSnackbar(`Lista gerada! ${itens_conhecidos.length + itens_novos.length} itens distintos.`, "check_circle");
+  mostrarSnackbar("JSON baixado", "download");
+  document.getElementById("menu-dropdown").classList.remove("visivel");
 }
 
 // ===================================================================

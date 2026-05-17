@@ -2,1470 +2,477 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#4a6845">
 <title>Lista de Compras</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap" rel="stylesheet">
 <style>
-  /* ========================================================
-     MATERIAL 3 TOKENS — Tema Verde Mercado
-     ======================================================== */
   :root {
-    /* Cores primárias */
     --md-primary:                #4a6845;
     --md-on-primary:             #ffffff;
     --md-primary-container:      #ccefc2;
     --md-on-primary-container:   #082106;
-
     --md-secondary:              #54634d;
-    --md-on-secondary:           #ffffff;
-    --md-secondary-container:    #d7e8cd;
-    --md-on-secondary-container: #121f0f;
-
-    --md-tertiary:               #386569;
-    --md-on-tertiary:            #ffffff;
     --md-tertiary-container:     #bcebef;
     --md-on-tertiary-container:  #002022;
-
     --md-error:                  #ba1a1a;
-    --md-on-error:               #ffffff;
     --md-error-container:        #ffdad6;
-
-    /* Surfaces */
     --md-surface:                #f8faf1;
     --md-on-surface:             #191d17;
     --md-on-surface-variant:     #43483f;
-    --md-surface-dim:            #d8dbd1;
-    --md-surface-bright:         #f8faf1;
     --md-surface-container-lowest:#ffffff;
     --md-surface-container-low:  #f2f5ec;
     --md-surface-container:      #ecefe6;
     --md-surface-container-high: #e7eae0;
-    --md-surface-container-highest:#e1e4db;
-
     --md-outline:                #73796f;
     --md-outline-variant:        #c3c8bc;
-
-    /* Shape tokens */
-    --md-shape-xs: 4px;
     --md-shape-sm: 8px;
     --md-shape-md: 12px;
     --md-shape-lg: 16px;
     --md-shape-xl: 28px;
     --md-shape-full: 9999px;
-
-    /* Elevations */
     --md-elev-1: 0 1px 2px rgba(0,0,0,0.05), 0 1px 3px rgba(0,0,0,0.10);
     --md-elev-2: 0 1px 2px rgba(0,0,0,0.06), 0 2px 6px rgba(0,0,0,0.12);
     --md-elev-3: 0 4px 8px rgba(0,0,0,0.10), 0 1px 3px rgba(0,0,0,0.06);
-    --md-elev-fab: 0 3px 5px rgba(0,0,0,0.18), 0 0 4px rgba(0,0,0,0.08);
-
-    /* Typography */
-    --md-font: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
   }
-
   * { box-sizing: border-box; margin: 0; padding: 0; }
-
   html, body { height: 100%; }
   body {
-    font-family: var(--md-font);
+    font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
     background: var(--md-surface);
     color: var(--md-on-surface);
     line-height: 1.4;
-    padding-bottom: 120px;
     -webkit-font-smoothing: antialiased;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    padding-bottom: env(safe-area-inset-bottom);
   }
 
-  .material-symbols-outlined {
-    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-    user-select: none;
-  }
-
-  /* ========================================================
-     TOP APP BAR
-     ======================================================== */
+  /* App bar */
   .app-bar {
-    position: sticky;
-    top: 0;
-    z-index: 50;
     background: var(--md-surface);
-    padding: 14px 16px 8px;
-  }
-  .app-bar-row {
+    padding: 18px 16px 8px;
     display: flex;
     align-items: center;
-    gap: 8px;
-    margin-bottom: 12px;
+    gap: 10px;
   }
-  .app-bar-row .title-large {
-    font-size: 22px;
-    font-weight: 500;
-    color: var(--md-on-surface);
-    letter-spacing: 0;
-    flex: 1;
-  }
-  .app-bar-row .leading-icon {
-    width: 48px; height: 48px;
+  .app-bar .icon {
+    width: 44px; height: 44px;
     border-radius: var(--md-shape-full);
     display: grid; place-items: center;
-    color: var(--md-primary);
-    flex-shrink: 0;
-  }
-  .app-bar-row .leading-icon .material-symbols-outlined { font-size: 28px; }
-
-  /* Search bar Material 3 */
-  .search-bar {
-    display: flex;
-    align-items: center;
-    background: var(--md-surface-container-high);
-    border-radius: var(--md-shape-full);
-    padding: 0 16px;
-    height: 48px;
-    gap: 12px;
-  }
-  .search-bar .material-symbols-outlined {
-    font-size: 22px;
-    color: var(--md-on-surface-variant);
-  }
-  .search-bar input {
-    flex: 1;
-    border: none;
-    background: transparent;
-    font-family: inherit;
-    font-size: 16px;
-    color: var(--md-on-surface);
-    outline: none;
-    height: 100%;
-  }
-  .search-bar input::placeholder { color: var(--md-on-surface-variant); }
-  .search-bar .clear-btn {
-    background: none; border: none; padding: 4px;
-    color: var(--md-on-surface-variant);
-    cursor: pointer; display: none;
-    border-radius: var(--md-shape-full);
-  }
-  .search-bar.has-text .clear-btn { display: grid; place-items: center; }
-
-  /* ========================================================
-     CHIP ROW (filter chips horizontal scroll)
-     ======================================================== */
-  .chip-row-wrap {
-    background: var(--md-surface);
-    position: sticky;
-    top: 70px;
-    z-index: 40;
-    padding: 8px 0 12px;
-    border-bottom: 1px solid var(--md-outline-variant);
-  }
-  .chip-row {
-    display: flex;
-    gap: 8px;
-    padding: 0 16px;
-    overflow-x: auto;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-  }
-  .chip-row::-webkit-scrollbar { display: none; }
-  .chip {
-    flex-shrink: 0;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 6px 14px;
-    height: 32px;
-    border-radius: var(--md-shape-sm);
-    border: 1px solid var(--md-outline);
-    background: transparent;
-    font-family: inherit;
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--md-on-surface-variant);
-    cursor: pointer;
-    white-space: nowrap;
-    transition: background 0.12s, color 0.12s, border-color 0.12s;
-  }
-  .chip:hover { background: rgba(74,104,69,0.05); }
-  .chip.ativo {
-    background: var(--md-secondary-container);
-    border-color: var(--md-secondary-container);
-    color: var(--md-on-secondary-container);
-    padding-left: 8px;
-  }
-  .chip.ativo::before {
-    content: 'check';
-    font-family: 'Material Symbols Outlined';
-    font-size: 18px;
-    font-variation-settings: 'FILL' 0, 'wght' 500;
-  }
-  .chip .material-symbols-outlined { font-size: 18px; }
-
-  /* ========================================================
-     MAIN CONTENT
-     ======================================================== */
-  main {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 16px;
-  }
-
-  /* Alerta de rascunho (banner Material 3) */
-  .banner {
-    background: var(--md-tertiary-container);
-    color: var(--md-on-tertiary-container);
-    border-radius: var(--md-shape-md);
-    padding: 12px 16px;
-    margin-bottom: 16px;
-    display: none;
-    align-items: center;
-    gap: 12px;
-  }
-  .banner.visivel { display: flex; }
-  .banner .material-symbols-outlined { font-size: 24px; flex-shrink: 0; }
-  .banner-body { flex: 1; font-size: 14px; }
-  .banner-body .info { display: block; font-size: 12px; opacity: 0.75; margin-top: 2px; }
-  .banner button {
-    background: transparent;
-    border: none;
-    color: var(--md-tertiary);
-    font-family: inherit;
-    font-weight: 500;
-    font-size: 13px;
-    padding: 8px 12px;
-    border-radius: var(--md-shape-full);
-    cursor: pointer;
-  }
-  .banner button:hover { background: rgba(56,101,105,0.08); }
-
-  /* Section por categoria */
-  .categoria {
-    margin-bottom: 32px;
-    scroll-margin-top: 130px;
-  }
-  .categoria-header {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 12px;
-    padding: 0 4px;
-  }
-  .categoria-header h2 {
-    font-size: 18px;
-    font-weight: 500;
-    color: var(--md-on-surface);
-    letter-spacing: 0.15px;
-    flex: 1;
-  }
-  .categoria-header .badge {
-    background: var(--md-primary);
-    color: var(--md-on-primary);
-    font-size: 11px;
-    font-weight: 600;
-    padding: 2px 8px;
-    border-radius: var(--md-shape-full);
-    min-width: 22px;
-    text-align: center;
-  }
-
-  /* Grid de cards */
-  .cards-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-    gap: 12px;
-  }
-  @media (min-width: 768px) {
-    .cards-grid {
-      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-      gap: 16px;
-    }
-  }
-
-  /* Card de produto Material 3 (filled card) */
-  .card {
-    background: var(--md-surface-container-low);
-    border-radius: var(--md-shape-md);
-    padding: 12px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    transition: background 0.15s, box-shadow 0.15s, transform 0.1s;
-    position: relative;
-    overflow: hidden;
-    min-height: 200px;
-  }
-  .card:hover {
-    background: var(--md-surface-container);
-    box-shadow: var(--md-elev-1);
-  }
-  .card.selecionado {
     background: var(--md-primary-container);
-    box-shadow: var(--md-elev-1);
+    color: var(--md-on-primary-container);
+    font-size: 22px;
   }
-  .card.selecionado .product-name { color: var(--md-on-primary-container); }
-  .card.selecionado .product-brand { color: var(--md-on-primary-container); opacity: 0.75; }
-
-  .icon-avatar {
-    width: 56px;
-    height: 56px;
-    border-radius: var(--md-shape-md);
-    background: var(--md-surface-container-high);
-    display: grid;
-    place-items: center;
-    font-size: 32px;
-    line-height: 1;
-    transition: background 0.15s, transform 0.15s;
-  }
-  .card.selecionado .icon-avatar {
-    background: var(--md-surface-container-lowest);
-    transform: scale(1.05);
-  }
-
-  .product-name {
-    font-size: 13px;
+  .app-bar h1 {
+    font-size: 22px;
     font-weight: 500;
-    line-height: 1.3;
-    color: var(--md-on-surface);
-    /* clamp 3 lines */
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
     flex: 1;
   }
-  .product-brand {
-    font-size: 11px;
-    color: var(--md-on-surface-variant);
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-  /* Qty stepper Material 3 (segmented) */
-  .qty-stepper {
-    display: flex;
-    align-items: center;
-    background: var(--md-surface-container-high);
-    border-radius: var(--md-shape-full);
-    height: 36px;
-    padding: 0;
-    overflow: hidden;
-    margin-top: auto;
-  }
-  .card.selecionado .qty-stepper {
-    background: rgba(255,255,255,0.55);
-  }
-  .qty-btn {
-    width: 36px;
-    height: 36px;
-    border: none;
-    background: transparent;
-    color: var(--md-on-surface);
-    cursor: pointer;
-    display: grid;
-    place-items: center;
-    transition: background 0.12s;
-    border-radius: var(--md-shape-full);
-    padding: 0;
-  }
-  .qty-btn:hover { background: rgba(74,104,69,0.10); }
-  .qty-btn:active { background: rgba(74,104,69,0.20); }
-  .qty-btn:disabled { opacity: 0.32; cursor: not-allowed; }
-  .qty-btn .material-symbols-outlined { font-size: 20px; }
-  .qty-input {
+
+  /* Main: textarea ocupa o resto */
+  main {
     flex: 1;
-    border: none;
-    background: transparent;
-    font-family: inherit;
-    font-size: 16px;
-    font-weight: 600;
-    color: var(--md-on-surface);
-    text-align: center;
-    outline: none;
-    -moz-appearance: textfield;
-    height: 100%;
-    min-width: 0;
-  }
-  .qty-input::-webkit-outer-spin-button,
-  .qty-input::-webkit-inner-spin-button {
-    -webkit-appearance: none; margin: 0;
-  }
-
-  /* ========================================================
-     SEÇÃO DE ITENS NOVOS (destaque)
-     ======================================================== */
-  .secao-novos {
-    background: var(--md-tertiary-container);
-    border-radius: var(--md-shape-lg);
-    padding: 16px;
-    margin-bottom: 32px;
-  }
-  .secao-novos .categoria-header h2 { color: var(--md-on-tertiary-container); }
-  .secao-novos .categoria-header .badge {
-    background: var(--md-tertiary);
-    color: var(--md-on-tertiary);
-  }
-  .item-novo {
-    background: var(--md-surface-container-lowest);
-    border-radius: var(--md-shape-md);
-    padding: 12px;
+    padding: 16px 16px 12px;
     display: flex;
-    align-items: center;
+    flex-direction: column;
     gap: 12px;
-    margin-bottom: 8px;
+    max-width: 720px;
+    width: 100%;
+    margin: 0 auto;
   }
-  .item-novo:last-child { margin-bottom: 0; }
-  .item-novo .icon-avatar {
-    background: var(--md-tertiary-container);
-    width: 48px;
-    height: 48px;
-    font-size: 26px;
-  }
-  .item-novo .info { flex: 1; min-width: 0; }
-  .item-novo .desc {
+  .hint {
     font-size: 14px;
-    font-weight: 500;
-    color: var(--md-on-surface);
-  }
-  .item-novo .obs {
-    font-size: 12px;
     color: var(--md-on-surface-variant);
-    font-style: italic;
-    margin-top: 2px;
+    line-height: 1.45;
   }
-  .item-novo .remove-btn {
-    width: 40px; height: 40px;
-    border-radius: var(--md-shape-full);
-    border: none;
-    background: transparent;
-    color: var(--md-error);
-    cursor: pointer;
-    display: grid; place-items: center;
-  }
-  .item-novo .remove-btn:hover { background: rgba(186,26,26,0.08); }
+  .hint strong { color: var(--md-on-surface); font-weight: 500; }
 
-  /* ========================================================
-     EMPTY STATE
-     ======================================================== */
-  .empty-state {
-    text-align: center;
-    padding: 64px 16px;
-    color: var(--md-on-surface-variant);
-    display: none;
-  }
-  .empty-state.visivel { display: block; }
-  .empty-state .material-symbols-outlined {
-    font-size: 72px;
-    color: var(--md-outline);
-    margin-bottom: 12px;
-  }
-  .empty-state h3 {
-    font-size: 18px;
-    font-weight: 500;
-    color: var(--md-on-surface);
-    margin-bottom: 4px;
-  }
-  .empty-state p { font-size: 14px; }
-
-  /* ========================================================
-     FAB (Floating Action Button) — Item novo
-     ======================================================== */
-  .fab {
-    position: fixed;
-    bottom: 92px;
-    right: 16px;
-    background: var(--md-tertiary-container);
-    color: var(--md-on-tertiary-container);
-    border: none;
-    border-radius: var(--md-shape-lg);
-    padding: 16px;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    font-family: inherit;
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    box-shadow: var(--md-elev-fab);
-    z-index: 45;
-    transition: box-shadow 0.15s, transform 0.1s, background 0.15s;
-  }
-  .fab:hover { box-shadow: var(--md-elev-3); background: #aedbe1; }
-  .fab:active { transform: scale(0.96); }
-  .fab .material-symbols-outlined { font-size: 24px; }
-
-  /* ========================================================
-     BOTTOM APP BAR
-     ======================================================== */
-  .bottom-bar {
-    position: fixed;
-    left: 0; right: 0; bottom: 0;
-    background: var(--md-surface-container);
-    padding: 12px 16px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    z-index: 50;
-    box-shadow: 0 -1px 3px rgba(0,0,0,0.05);
-  }
-  .icon-button {
-    width: 48px; height: 48px;
-    border-radius: var(--md-shape-full);
-    border: none;
-    background: transparent;
-    color: var(--md-on-surface-variant);
-    cursor: pointer;
-    display: grid;
-    place-items: center;
-    flex-shrink: 0;
-  }
-  .icon-button:hover { background: rgba(74,104,69,0.08); }
-  .icon-button .material-symbols-outlined { font-size: 24px; }
-
-  .resumo {
+  .editor-wrap {
+    position: relative;
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 2px;
-    min-width: 0;
+    min-height: 280px;
   }
-  .resumo .total {
-    font-size: 18px;
-    font-weight: 600;
+  textarea {
+    flex: 1;
+    width: 100%;
+    background: var(--md-surface-container-low);
+    border: 2px solid transparent;
+    border-radius: var(--md-shape-lg);
+    padding: 16px 60px 16px 16px;
+    font-family: inherit;
+    font-size: 17px;
+    line-height: 1.55;
     color: var(--md-on-surface);
-    line-height: 1.1;
+    resize: none;
+    outline: none;
+    transition: border-color 0.15s, background 0.15s;
+    min-height: 280px;
   }
-  .resumo .total strong { color: var(--md-primary); font-weight: 700; }
-  .resumo .estimativa {
-    font-size: 12px;
+  textarea:focus {
+    background: var(--md-surface-container-lowest);
+    border-color: var(--md-primary);
+  }
+  textarea::placeholder {
     color: var(--md-on-surface-variant);
+    opacity: 0.7;
+    white-space: pre-line;
   }
 
-  .gerar-btn {
+  /* Mic button (overlay no canto do textarea) */
+  .mic-btn {
+    position: absolute;
+    right: 12px;
+    top: 12px;
+    width: 44px;
+    height: 44px;
+    border-radius: var(--md-shape-full);
+    border: none;
+    background: var(--md-primary-container);
+    color: var(--md-on-primary-container);
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    font-size: 22px;
+    transition: background 0.15s, transform 0.1s;
+    box-shadow: var(--md-elev-1);
+  }
+  .mic-btn:hover { background: #bce5b1; }
+  .mic-btn:active { transform: scale(0.94); }
+  .mic-btn.gravando {
+    background: var(--md-error);
+    color: #fff;
+    animation: pulse 1.2s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(186,26,26,0.55); }
+    50%      { box-shadow: 0 0 0 12px rgba(186,26,26,0.0); }
+  }
+  .mic-btn.indisponivel { display: none; }
+
+  /* Estado de gravação — feedback acima do textarea */
+  .gravando-info {
+    display: none;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 10px;
+    background: var(--md-error-container);
+    color: var(--md-error);
+    border-radius: var(--md-shape-sm);
+    font-size: 13px;
+    font-weight: 500;
+    width: fit-content;
+  }
+  .gravando-info.visivel { display: inline-flex; }
+  .gravando-info::before {
+    content: "";
+    width: 8px; height: 8px;
+    border-radius: var(--md-shape-full);
+    background: var(--md-error);
+    animation: blink 1s infinite;
+  }
+  @keyframes blink { 50% { opacity: 0.3; } }
+
+  /* Footer com botão enviar */
+  footer {
+    padding: 12px 16px 18px;
+    background: var(--md-surface);
+    display: flex;
+    justify-content: center;
+    border-top: 1px solid var(--md-outline-variant);
+  }
+  .enviar-btn {
+    width: 100%;
+    max-width: 360px;
+    height: 56px;
     background: var(--md-primary);
     color: var(--md-on-primary);
     border: none;
     border-radius: var(--md-shape-full);
-    padding: 0 24px;
-    height: 40px;
     font-family: inherit;
-    font-size: 14px;
+    font-size: 16px;
     font-weight: 500;
-    letter-spacing: 0.1px;
     cursor: pointer;
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 8px;
     transition: background 0.15s, box-shadow 0.15s;
+    box-shadow: var(--md-elev-1);
   }
-  .gerar-btn:hover { box-shadow: var(--md-elev-1); background: #3e5b39; }
-  .gerar-btn:active { background: #355031; }
-  .gerar-btn:disabled {
+  .enviar-btn:hover { background: #3e5b39; box-shadow: var(--md-elev-2); }
+  .enviar-btn:active { background: #355031; }
+  .enviar-btn:disabled {
     background: rgba(25,29,23,0.12);
     color: rgba(25,29,23,0.38);
     cursor: not-allowed;
     box-shadow: none;
   }
-  .gerar-btn .material-symbols-outlined { font-size: 18px; }
+  .enviar-btn .spin { animation: spin 1s linear infinite; }
   @keyframes spin { to { transform: rotate(360deg); } }
 
-  /* ========================================================
-     MENU DROPDOWN
-     ======================================================== */
-  .menu-dropdown {
-    position: fixed;
-    bottom: 76px;
-    left: 16px;
-    background: var(--md-surface-container-high);
-    border-radius: var(--md-shape-sm);
-    padding: 8px 0;
-    box-shadow: var(--md-elev-3);
-    z-index: 60;
-    min-width: 220px;
-    display: none;
-  }
-  .menu-dropdown.visivel { display: block; }
-  .menu-dropdown button {
-    width: 100%;
-    background: transparent;
-    border: none;
-    text-align: left;
-    padding: 12px 16px;
-    font-family: inherit;
-    font-size: 14px;
-    color: var(--md-on-surface);
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-  .menu-dropdown button:hover { background: rgba(74,104,69,0.08); }
-  .menu-dropdown button.danger { color: var(--md-error); }
-  .menu-dropdown .material-symbols-outlined { font-size: 20px; }
-  .menu-dropdown hr {
-    border: none;
-    border-top: 1px solid var(--md-outline-variant);
-    margin: 4px 0;
-  }
-
-  /* ========================================================
-     MODAL DIALOG MATERIAL 3
-     ======================================================== */
-  .modal-scrim {
-    position: fixed; inset: 0;
-    background: rgba(0,0,0,0.4);
+  /* Rascunho banner */
+  .banner {
+    background: var(--md-tertiary-container);
+    color: var(--md-on-tertiary-container);
+    border-radius: var(--md-shape-md);
+    padding: 10px 12px;
+    font-size: 13px;
     display: none;
     align-items: center;
-    justify-content: center;
-    z-index: 100;
-    padding: 16px;
-  }
-  .modal-scrim.visivel { display: flex; }
-  .modal {
-    background: var(--md-surface-container-high);
-    border-radius: var(--md-shape-xl);
-    padding: 24px;
-    max-width: 480px;
-    width: 100%;
-    box-shadow: var(--md-elev-3);
-  }
-  .modal h2 {
-    font-size: 22px;
-    font-weight: 500;
-    color: var(--md-on-surface);
-    margin-bottom: 16px;
-    line-height: 1.25;
-  }
-  .field {
-    margin-top: 16px;
-    position: relative;
-  }
-  .field:first-of-type { margin-top: 8px; }
-  .field label {
-    display: block;
-    font-size: 12px;
-    font-weight: 500;
-    color: var(--md-on-surface-variant);
-    margin-bottom: 6px;
-  }
-  .field input, .field textarea {
-    width: 100%;
-    background: var(--md-surface-container-lowest);
-    border: 1px solid var(--md-outline);
-    border-radius: var(--md-shape-xs);
-    padding: 12px 14px;
-    font-family: inherit;
-    font-size: 16px;
-    color: var(--md-on-surface);
-    outline: none;
-    transition: border-color 0.15s;
-  }
-  .field input:focus, .field textarea:focus {
-    border-color: var(--md-primary);
-    border-width: 2px;
-    padding: 11px 13px;
-  }
-  .field textarea { resize: vertical; min-height: 60px; }
-
-  .modal-actions {
-    display: flex;
-    justify-content: flex-end;
     gap: 8px;
-    margin-top: 24px;
+    justify-content: space-between;
   }
-  .text-button {
+  .banner.visivel { display: flex; }
+  .banner button {
     background: transparent;
     border: none;
-    color: var(--md-primary);
+    color: var(--md-on-tertiary-container);
     font-family: inherit;
-    font-size: 14px;
     font-weight: 500;
-    padding: 10px 16px;
+    font-size: 13px;
+    padding: 4px 8px;
     border-radius: var(--md-shape-full);
     cursor: pointer;
-    letter-spacing: 0.1px;
+    text-decoration: underline;
   }
-  .text-button:hover { background: rgba(74,104,69,0.08); }
-  .filled-button {
-    background: var(--md-primary);
-    color: var(--md-on-primary);
-    border: none;
-    font-family: inherit;
-    font-size: 14px;
-    font-weight: 500;
-    padding: 10px 20px;
-    border-radius: var(--md-shape-full);
-    cursor: pointer;
-    letter-spacing: 0.1px;
-    transition: background 0.15s, box-shadow 0.15s;
-  }
-  .filled-button:hover { background: #3e5b39; box-shadow: var(--md-elev-1); }
 
-  /* ========================================================
-     TOAST (snackbar)
-     ======================================================== */
+  /* Snackbar */
   .snackbar {
     position: fixed;
-    bottom: 92px;
+    bottom: calc(80px + env(safe-area-inset-bottom));
     left: 50%;
     transform: translateX(-50%) translateY(20px);
     background: #2a3127;
     color: #f1f1ec;
-    padding: 14px 16px;
-    border-radius: var(--md-shape-xs);
+    padding: 12px 18px;
+    border-radius: var(--md-shape-sm);
     font-size: 14px;
-    font-weight: 400;
     box-shadow: var(--md-elev-3);
     opacity: 0;
     pointer-events: none;
     transition: all 0.25s;
     z-index: 200;
     max-width: calc(100% - 32px);
-    display: flex;
-    align-items: center;
-    gap: 8px;
   }
   .snackbar.visivel {
     opacity: 1;
     transform: translateX(-50%) translateY(0);
   }
-  .snackbar .material-symbols-outlined { font-size: 20px; }
+  .snackbar.success { background: #1f3d20; }
+  .snackbar.error { background: #7a1a1a; }
 
-  /* ========================================================
-     MOBILE TWEAKS
-     ======================================================== */
+  /* Mobile tweaks */
   @media (max-width: 480px) {
-    main { padding: 12px; }
-    .card { padding: 10px; min-height: 180px; }
-    .icon-avatar { width: 48px; height: 48px; font-size: 28px; }
-    .product-name { font-size: 12px; -webkit-line-clamp: 2; }
-    .fab span:not(.material-symbols-outlined) { display: none; }
-    .fab { padding: 14px; border-radius: var(--md-shape-md); }
-    .resumo .total { font-size: 16px; }
+    .app-bar { padding: 14px 14px 6px; }
+    .app-bar h1 { font-size: 18px; }
+    .app-bar .icon { width: 40px; height: 40px; font-size: 20px; }
+    main { padding: 12px 12px 8px; gap: 10px; }
+    textarea { font-size: 16px; padding: 14px 56px 14px 14px; min-height: 240px; }
+    .hint { font-size: 13px; }
+    footer { padding: 10px 12px 14px; }
   }
 </style>
 </head>
 <body>
 
-<!-- ============================================================
-     APP BAR + SEARCH
-     ============================================================ -->
 <header class="app-bar">
-  <div class="app-bar-row">
-    <div class="leading-icon">
-      <span class="material-symbols-outlined">shopping_cart</span>
-    </div>
-    <div class="title-large">Lista de Compras</div>
-  </div>
-  <div class="search-bar" id="search-bar">
-    <span class="material-symbols-outlined">search</span>
-    <input type="text" id="busca" placeholder="Buscar produto ou marca…" autocomplete="off">
-    <button class="clear-btn" onclick="limparBusca()" aria-label="Limpar busca">
-      <span class="material-symbols-outlined">close</span>
-    </button>
-  </div>
+  <div class="icon">🛒</div>
+  <h1>Lista de Compras</h1>
 </header>
 
-<!-- ============================================================
-     CHIP ROW (filtros de categoria)
-     ============================================================ -->
-<div class="chip-row-wrap">
-  <div class="chip-row" id="chip-row"></div>
-</div>
-
-<!-- ============================================================
-     MAIN
-     ============================================================ -->
 <main>
   <div class="banner" id="banner-rascunho">
-    <span class="material-symbols-outlined">history</span>
-    <div class="banner-body">
-      Continuamos do rascunho salvo.
-      <span class="info" id="rascunho-info"></span>
-    </div>
-    <button onclick="limparRascunho()">Começar do zero</button>
+    <span>📝 Rascunho salvo automaticamente</span>
+    <button onclick="limparRascunho()">Apagar</button>
   </div>
 
-  <div id="lista-categorias"></div>
+  <p class="hint">
+    <strong>Diz pra mim do que você precisa.</strong> Pode escrever em uma linha só ou separado, do jeito que quiser. Pode dizer marca, quantidade, observação — eu entendo. Se quiser, toca no microfone e fala.
+  </p>
 
-  <div class="empty-state" id="empty-state">
-    <span class="material-symbols-outlined">search_off</span>
-    <h3>Nada encontrado</h3>
-    <p>Tente outro termo ou adicione como item novo.</p>
+  <div class="gravando-info" id="gravando-info">Ouvindo… fala normal</div>
+
+  <div class="editor-wrap">
+    <textarea
+      id="texto"
+      autocomplete="off"
+      autocapitalize="sentences"
+      placeholder="Ex:
+6 cocas zero 1,5l
+sabão ariel
+amaciante comfort
+2 papéis higiênico
+um pão de forma pullman
+bananas, umas 800g
+azeite andorinha
+3 caixas de leite ninho"
+    ></textarea>
+    <button class="mic-btn" id="mic-btn" onclick="toggleMic()" aria-label="Falar a lista">🎤</button>
   </div>
 </main>
 
-<!-- ============================================================
-     FAB
-     ============================================================ -->
-<button class="fab" onclick="abrirModalNovoItem()" aria-label="Adicionar item novo">
-  <span class="material-symbols-outlined">add</span>
-  <span>Item novo</span>
-</button>
+<footer>
+  <button class="enviar-btn" id="enviar-btn" onclick="enviarLista()" disabled>
+    <span id="enviar-texto">Enviar pra Armando</span>
+    <span id="enviar-icon">📤</span>
+  </button>
+</footer>
 
-<!-- ============================================================
-     MENU DROPDOWN
-     ============================================================ -->
-<div class="menu-dropdown" id="menu-dropdown">
-  <button onclick="baixarListaLocal()">
-    <span class="material-symbols-outlined">download</span>
-    Baixar JSON local
-  </button>
-  <button onclick="zerarQuantidades()">
-    <span class="material-symbols-outlined">restart_alt</span>
-    Zerar quantidades
-  </button>
-  <hr>
-  <button class="danger" onclick="limparRascunho()">
-    <span class="material-symbols-outlined">delete_forever</span>
-    Apagar lista inteira
-  </button>
-</div>
-
-<!-- ============================================================
-     BOTTOM APP BAR
-     ============================================================ -->
-<div class="bottom-bar">
-  <button class="icon-button" onclick="toggleMenu()" aria-label="Mais opções">
-    <span class="material-symbols-outlined">more_vert</span>
-  </button>
-  <div class="resumo">
-    <div class="total"><strong id="contagem-itens">0</strong> itens na lista</div>
-    <div class="estimativa" id="estimativa-total">monte a sua lista</div>
-  </div>
-  <button class="gerar-btn" id="gerar-btn" onclick="enviarLista()" disabled>
-    <span id="gerar-btn-texto">Enviar pra Armando</span>
-    <span class="material-symbols-outlined" id="gerar-btn-icon">send</span>
-  </button>
-</div>
-
-<!-- ============================================================
-     MODAL: ITEM NOVO
-     ============================================================ -->
-<div class="modal-scrim" id="modal-novo">
-  <div class="modal">
-    <h2>Adicionar item novo</h2>
-    <div class="field">
-      <label for="novo-descricao">O que você quer comprar?</label>
-      <input type="text" id="novo-descricao" placeholder="Ex: Leite de amêndoas Almond Breeze">
-    </div>
-    <div class="field">
-      <label for="novo-quantidade">Quantidade</label>
-      <input type="number" id="novo-quantidade" min="1" value="1">
-    </div>
-    <div class="field">
-      <label for="novo-obs">Observação (opcional)</label>
-      <textarea id="novo-obs" placeholder="Marca preferida, tamanho, sabor…"></textarea>
-    </div>
-    <div class="modal-actions">
-      <button class="text-button" onclick="fecharModal()">Cancelar</button>
-      <button class="filled-button" onclick="confirmarNovoItem()">Adicionar</button>
-    </div>
-  </div>
-</div>
-
-<!-- ============================================================
-     SNACKBAR
-     ============================================================ -->
 <div class="snackbar" id="snackbar"></div>
 
 <script>
-// ===================================================================
-// CATÁLOGO (espelha catalogo.json)
-// ===================================================================
-const CATALOGO = {
-  categorias: [
-    "Bebidas - Águas",
-    "Bebidas - Refrigerantes e Tônicas",
-    "Bebidas - Sucos e Coco",
-    "Padaria",
-    "Mercearia - Óleos e Vinagres",
-    "Mercearia - Enlatados",
-    "Mercearia - Massas",
-    "Mercearia - Arroz e Feijão",
-    "Mercearia - Farinhas e Açúcar",
-    "Mercearia - Café e Achocolatado",
-    "Mercearia - Molhos e Condimentos",
-    "Mercearia - Snacks",
-    "Laticínios - Manteigas",
-    "Laticínios - Leites e Cremes",
-    "Laticínios - Queijos",
-    "Laticínios - Iogurtes",
-    "Ovos",
-    "Carnes e Frios",
-    "Congelados",
-    "Frutas",
-    "Verduras e Legumes",
-    "Limpeza",
-    "Higiene Pessoal",
-    "Outros"
-  ],
-  produtos: [
-    {id:"agua-minalba-sem-gas-1500", nome:"Água Mineral Minalba sem Gás 1,5L", marca:"Minalba", categoria:"Bebidas - Águas", preco:3.79},
-    {id:"agua-minalba-com-gas-300", nome:"Água Mineral Minalba com Gás 300ml", marca:"Minalba", categoria:"Bebidas - Águas", preco:5.06},
-    {id:"coca-zero-1l", nome:"Coca-Cola Zero 1L", marca:"Coca-Cola", categoria:"Bebidas - Refrigerantes e Tônicas", preco:6.49},
-    {id:"coca-zero-1500", nome:"Coca-Cola Zero 1,5L (pack 6un Shopper)", marca:"Coca-Cola", categoria:"Bebidas - Refrigerantes e Tônicas", preco:8.21},
-    {id:"guarana-zero-1500", nome:"Guaraná Antarctica Zero 1,5L", marca:"Antarctica", categoria:"Bebidas - Refrigerantes e Tônicas", preco:6.99},
-    {id:"agua-tonica-antarctica-zero-350", nome:"Água Tônica Antarctica Zero 350ml (lata)", marca:"Antarctica", categoria:"Bebidas - Refrigerantes e Tônicas", preco:3.49},
-    {id:"agua-coco-sococo-200", nome:"Água de Coco Sococo 200ml", marca:"Sococo", categoria:"Bebidas - Sucos e Coco", preco:4.79},
-    {id:"pao-leite-paderri-200", nome:"Pão de Leite Paderri 200g", marca:"Paderri", categoria:"Padaria", preco:11.99},
-    {id:"pao-forma-pullman-artesano-500", nome:"Pão de Forma Pullman Artesano Integral 500g", marca:"Pullman", categoria:"Padaria", preco:14.99},
-    {id:"pao-integral-nutrella-450", nome:"Pão Integral 14 Grãos Nutrella 450g", marca:"Nutrella", categoria:"Padaria", preco:16.69},
-    {id:"pao-queijo-forno-minas-820", nome:"Pão de Queijo Forno de Minas 820g (congelado)", marca:"Forno de Minas", categoria:"Padaria", preco:39.50},
-    {id:"oleo-soja-liza-900", nome:"Óleo de Soja Liza 900ml", marca:"Liza", categoria:"Mercearia - Óleos e Vinagres", preco:9.99},
-    {id:"azeite-andorinha-extra-virgem-500", nome:"Azeite Extra Virgem Andorinha 500ml", marca:"Andorinha", categoria:"Mercearia - Óleos e Vinagres", preco:29.99},
-    {id:"vinagre-alcool-castelo-750", nome:"Vinagre de Álcool Castelo 750ml", marca:"Castelo", categoria:"Mercearia - Óleos e Vinagres", preco:5.49},
-    {id:"fermento-dona-benta-100", nome:"Fermento em Pó Dona Benta 100g", marca:"Dona Benta", categoria:"Mercearia - Óleos e Vinagres", preco:4.59},
-    {id:"tomate-pelado-lapastina-400", nome:"Tomate Pelado Orgânico La Pastina 400g", marca:"La Pastina", categoria:"Mercearia - Enlatados", preco:18.79},
-    {id:"milho-daucy-300", nome:"Milho Verde Daucy Congelado 300g", marca:"Daucy", categoria:"Mercearia - Enlatados", preco:9.59},
-    {id:"macarrao-adria-pena-500", nome:"Macarrão Adria Penna com Ovos 500g", marca:"Adria", categoria:"Mercearia - Massas", preco:4.29},
-    {id:"macarrao-adria-ave-maria-500", nome:"Macarrão Adria Ave Maria com Ovos 500g", marca:"Adria", categoria:"Mercearia - Massas", preco:4.29},
-    {id:"macarrao-barilla-penne-500", nome:"Macarrão Barilla Penne Rigate 500g", marca:"Barilla", categoria:"Mercearia - Massas", preco:4.99},
-    {id:"macarrao-barilla-espaguete-500", nome:"Macarrão Barilla Espaguete nº8 500g", marca:"Barilla", categoria:"Mercearia - Massas", preco:4.99},
-    {id:"arroz-tio-joao-2kg", nome:"Arroz Tio João Agulhinha 2kg", marca:"Tio João", categoria:"Mercearia - Arroz e Feijão", preco:12.49},
-    {id:"arroz-tio-joao-1kg", nome:"Arroz Tio João Agulhinha 1kg", marca:"Tio João", categoria:"Mercearia - Arroz e Feijão", preco:6.79},
-    {id:"feijao-preto-kicaldo-1kg", nome:"Feijão Preto Kicaldo 1kg", marca:"Kicaldo", categoria:"Mercearia - Arroz e Feijão", preco:7.49},
-    {id:"feijao-preto-broto-legal-1kg", nome:"Feijão Preto Broto Legal 1kg", marca:"Broto Legal", categoria:"Mercearia - Arroz e Feijão", preco:7.99},
-    {id:"feijao-carioca-camil-1kg", nome:"Feijão Carioca Camil 1kg", marca:"Camil", categoria:"Mercearia - Arroz e Feijão", preco:9.99},
-    {id:"farofa-yoki-400", nome:"Farofa Yoki Tradicional 400g", marca:"Yoki", categoria:"Mercearia - Farinhas e Açúcar", preco:6.22},
-    {id:"acucar-caravelas-1kg", nome:"Açúcar Refinado Caravelas 1kg", marca:"Caravelas", categoria:"Mercearia - Farinhas e Açúcar", preco:4.29},
-    {id:"cafe-melitta-extraforte-500", nome:"Café Melitta Extraforte 500g", marca:"Melitta", categoria:"Mercearia - Café e Achocolatado", preco:38.99},
-    {id:"filtro-melitta-2-30un", nome:"Filtro de Papel Melitta nº2 (30un)", marca:"Melitta", categoria:"Mercearia - Café e Achocolatado", preco:6.99},
-    {id:"toddy-original-370", nome:"Achocolatado Toddy Original 370g", marca:"Toddy", categoria:"Mercearia - Café e Achocolatado", preco:12.74},
-    {id:"ketchup-hemmer-750", nome:"Ketchup Hemmer Tradicional 750g", marca:"Hemmer", categoria:"Mercearia - Molhos e Condimentos", preco:17.99},
-    {id:"snack-kalassi-queijo-cebola-100", nome:"Snack de Arroz Kalassi Queijo e Cebola 100g", marca:"Kalassi", categoria:"Mercearia - Snacks", preco:21.99},
-    {id:"manteiga-president-200", nome:"Manteiga Président Gastronomique 200g", marca:"Président", categoria:"Laticínios - Manteigas", preco:13.99},
-    {id:"manteiga-aviacao-500", nome:"Manteiga Aviação com Sal 500g", marca:"Aviação", categoria:"Laticínios - Manteigas", preco:38.90},
-    {id:"leite-ninho-levinho-1l", nome:"Leite Ninho Levinho Semi-Desnatado 1L", marca:"Ninho", categoria:"Laticínios - Leites e Cremes", preco:7.99},
-    {id:"creme-leite-fresco-500", nome:"Creme de Leite Fresco 500g", marca:"(qualquer)", categoria:"Laticínios - Leites e Cremes", preco:29.90},
-    {id:"leite-condensado-moca-395", nome:"Leite Condensado Moça 395g (lata)", marca:"Moça", categoria:"Laticínios - Leites e Cremes", preco:8.99},
-    {id:"cream-cheese-philadelphia-150", nome:"Cream Cheese Philadelphia 150g", marca:"Philadelphia", categoria:"Laticínios - Queijos", preco:13.50},
-    {id:"requeijao-catupiry-200", nome:"Requeijão Catupiry Tradicional 200g", marca:"Catupiry", categoria:"Laticínios - Queijos", preco:10.90},
-    {id:"requeijao-catupiry-400", nome:"Requeijão Catupiry Tradicional 400g", marca:"Catupiry", categoria:"Laticínios - Queijos", preco:20.50},
-    {id:"parmesao-gran-formaggio-180", nome:"Queijo Parmesão Gran Formaggio 180g", marca:"Gran Formaggio", categoria:"Laticínios - Queijos", preco:39.58},
-    {id:"parmesao-ralado-president-100", nome:"Queijo Parmesão Ralado Président 100g", marca:"Président", categoria:"Laticínios - Queijos", preco:11.90},
-    {id:"mussarela-bufala-cerejinha-bufalo-dourado-150", nome:"Mussarela Búfala Cerejinha Búfalo Dourado 150g", marca:"Búfalo Dourado", categoria:"Laticínios - Queijos", preco:19.50},
-    {id:"mussarela-bufala-bolinha-almeida-prado-200", nome:"Mussarela Búfala Bolinha Almeida Prado 200g", marca:"Almeida Prado", categoria:"Laticínios - Queijos", preco:31.90},
-    {id:"polenguinho-original-8un", nome:"Polenguinho Original 136g (8un)", marca:"Polenguinho", categoria:"Laticínios - Queijos", preco:14.50},
-    {id:"iogurte-leitissimo-170", nome:"Iogurte Natural Leitíssimo 170g", marca:"Leitíssimo", categoria:"Laticínios - Iogurtes", preco:5.99},
-    {id:"iogurte-atilatte-170", nome:"Iogurte Natural Atilatte 170g", marca:"Atilatte", categoria:"Laticínios - Iogurtes", preco:5.79},
-    {id:"ovos-happy-eggs-10un", nome:"Ovos Vermelhos Happy Eggs (10un)", marca:"Happy Eggs", categoria:"Ovos", preco:11.99},
-    {id:"bacon-sadia-300", nome:"Bacon Sadia 300g", marca:"Sadia", categoria:"Carnes e Frios", preco:14.37},
-    {id:"linguica-calabresa-aurora-500", nome:"Linguiça Calabresa Aurora 500g", marca:"Aurora", categoria:"Carnes e Frios", preco:16.45},
-    {id:"linguica-calabresa-ceratti-370", nome:"Linguiça Calabresa Ceratti 370g", marca:"Ceratti", categoria:"Carnes e Frios", preco:20.90},
-    {id:"linguica-calabresa-defumada-sadia-500", nome:"Linguiça Calabresa Defumada Sadia 500g", marca:"Sadia", categoria:"Carnes e Frios", preco:16.45},
-    {id:"nuggets-sadia-700", nome:"Nuggets Empanado Sadia 700g", marca:"Sadia", categoria:"Carnes e Frios", preco:18.68},
-    {id:"batata-mccain-airfryer-600", nome:"Batata McCain Airfryer 600g", marca:"McCain", categoria:"Congelados", preco:12.99},
-    {id:"sorbet-acai-frooty-700", nome:"Sorbet de Açaí Frooty 700ml", marca:"Frooty", categoria:"Congelados", preco:36.99},
-    {id:"abacaxi-perola-un", nome:"Abacaxi Pérola (un)", marca:"natural", categoria:"Frutas", preco:12.99},
-    {id:"banana-nanica-800", nome:"Banana Nanica 800g", marca:"natural", categoria:"Frutas", preco:7.19},
-    {id:"melao-amarelo-rei-2500", nome:"Melão Amarelo Rei 2,5kg (un)", marca:"natural", categoria:"Frutas", preco:47.45},
-    {id:"limao-tahiti-qualita-1kg", nome:"Limão Tahiti Qualitá 1kg", marca:"Qualitá", categoria:"Frutas", preco:4.99},
-    {id:"pera-portuguesa-rocha-400", nome:"Pêra Portuguesa Rocha 400g", marca:"natural", categoria:"Frutas", preco:12.00},
-    {id:"maca-granny-smith-500", nome:"Maçã Granny Smith 500g", marca:"natural", categoria:"Frutas", preco:8.49},
-    {id:"uva-vitoria-qualita-500", nome:"Uva Vitória Sem Semente Qualitá 500g", marca:"Qualitá", categoria:"Frutas", preco:14.44},
-    {id:"abobrinha-italiana-800", nome:"Abobrinha Italiana 800g", marca:"natural", categoria:"Verduras e Legumes", preco:10.39},
-    {id:"tomate-italiano-500", nome:"Tomate Italiano 500g", marca:"natural", categoria:"Verduras e Legumes", preco:7.99},
-    {id:"tomate-fonte-verde-250", nome:"Tomate Fonte Verde 250g", marca:"Fonte Verde", categoria:"Verduras e Legumes", preco:2.78},
-    {id:"batata-1300", nome:"Batata 1,3kg (3 un)", marca:"natural", categoria:"Verduras e Legumes", preco:11.69},
-    {id:"cebola-granel-600", nome:"Cebola Granel 600g", marca:"natural", categoria:"Verduras e Legumes", preco:4.79},
-    {id:"cebola-roxa-400", nome:"Cebola Roxa 400g", marca:"natural", categoria:"Verduras e Legumes", preco:5.40},
-    {id:"cenoura-granel-500", nome:"Cenoura Granel 500g", marca:"natural", categoria:"Verduras e Legumes", preco:6.45},
-    {id:"alface-americana-la-vita-un", nome:"Alface Americana La Vita (un)", marca:"La Vita", categoria:"Verduras e Legumes", preco:9.99},
-    {id:"salsa-cebolinha-un", nome:"Salsa e Cebolinha (un)", marca:"natural", categoria:"Verduras e Legumes", preco:6.99},
-    {id:"couve-qualita-180", nome:"Couve Manteiga Qualitá 180g", marca:"Qualitá", categoria:"Verduras e Legumes", preco:10.29},
-    {id:"brocolis-ninja-qualita-300", nome:"Brócolis Ninja Qualitá 300g", marca:"Qualitá", categoria:"Verduras e Legumes", preco:13.90},
-    {id:"abobora-japonesa-1700", nome:"Abóbora Japonesa 1,7kg", marca:"natural", categoria:"Verduras e Legumes", preco:11.87},
-    {id:"sabao-ariel-cores-radiantes-toque-downy-3l", nome:"Sabão Líquido Ariel Cores Radiantes Toque de Downy 3L", marca:"Ariel", categoria:"Limpeza", preco:40.10},
-    {id:"amaciante-comfort-frescor-intenso-1500", nome:"Amaciante Comfort Concentrado Frescor Intenso 1,5L", marca:"Comfort", categoria:"Limpeza", preco:30.20},
-    {id:"detergente-limpol-cristal-500", nome:"Detergente Limpol Cristal 500ml", marca:"Limpol", categoria:"Limpeza", preco:2.65},
-    {id:"detergente-limpol-pack-6un", nome:"Detergente Limpol Cristal 500ml (Pack 6un)", marca:"Limpol", categoria:"Limpeza", preco:15.49},
-    {id:"limpador-veja-lavanda-2l", nome:"Limpador Veja Perfumes Lavanda 2L", marca:"Veja", categoria:"Limpeza", preco:11.51},
-    {id:"esponja-limppano-azul-3un", nome:"Esponja Limppano Azul Não Risca (3un)", marca:"Limppano", categoria:"Limpeza", preco:11.99},
-    {id:"esponja-qualita-4un", nome:"Esponja Multiuso Qualitá (Leve 4 Pague 3)", marca:"Qualitá", categoria:"Limpeza", preco:5.71},
-    {id:"saco-lixo-qualita-50un", nome:"Saco de Lixo Pia/Banheiro Qualitá (50un)", marca:"Qualitá", categoria:"Limpeza", preco:2.90},
-    {id:"agua-sanitaria-candida-2l", nome:"Água Sanitária Super Cândida 2L", marca:"Cândida", categoria:"Limpeza", preco:6.99},
-    {id:"desinfetante-hidrosteril-50", nome:"Desinfetante Hortifruti Hidrosteril 50ml", marca:"Hidrosteril", categoria:"Limpeza", preco:18.49},
-    {id:"guardanapo-qualita-50un", nome:"Guardanapo Qualitá Folha Dupla (50un)", marca:"Qualitá", categoria:"Limpeza", preco:10.99},
-    {id:"toalha-papel-qualita-2un", nome:"Toalha de Papel Qualitá (2un)", marca:"Qualitá", categoria:"Limpeza", preco:6.49},
-    {id:"papel-higienico-neve-16un", nome:"Papel Higiênico Neve 30m (16un)", marca:"Neve", categoria:"Limpeza", preco:29.99},
-    {id:"creme-dental-oralb-3dwhite-70", nome:"Creme Dental Oral-B 3D White 70g", marca:"Oral-B", categoria:"Higiene Pessoal", preco:12.49},
-    {id:"sabonete-dove-erva-doce-6un", nome:"Sabonete Dove Erva-Doce 90g (Pack 6un)", marca:"Dove", categoria:"Higiene Pessoal", preco:23.99},
-    {id:"shampoo-huggies-bebe-200", nome:"Shampoo Huggies Bebê 200ml", marca:"Huggies", categoria:"Higiene Pessoal", preco:23.99},
-    {id:"repelente-sbp-refil-2un", nome:"Repelente SBP Refil 32,9ml (2un)", marca:"SBP", categoria:"Outros", preco:27.99}
-  ]
-};
+const JSONBIN_ACCESS_KEY = "$2a$10$/7komFl12KCkc/RI7.mXL.oEt/KBzhnTFz/6nJIJTjqv/7XJuM6s2";
+const JSONBIN_COLLECTION_ID = "6a0a45c3c0954111d83b04d3";
+const STORAGE_KEY = "lista-compras-rascunho-v3";
+
+const $texto = document.getElementById("texto");
+const $enviarBtn = document.getElementById("enviar-btn");
+const $enviarTexto = document.getElementById("enviar-texto");
+const $enviarIcon = document.getElementById("enviar-icon");
+const $banner = document.getElementById("banner-rascunho");
+const $mic = document.getElementById("mic-btn");
+const $gravando = document.getElementById("gravando-info");
+const $snack = document.getElementById("snackbar");
 
 // ===================================================================
-// MAPEAMENTO DE EMOJIS — por palavra-chave (mais específicas primeiro)
-// e categoria como fallback
+// RASCUNHO (localStorage)
 // ===================================================================
-const ICON_BY_KEYWORD = [
-  // bebidas
-  [/tônica|tonica/i, "🍸"],
-  [/coca/i, "🥤"],
-  [/guaran/i, "🥤"],
-  [/refrigerante/i, "🥤"],
-  [/água de coco|agua de coco/i, "🥥"],
-  [/\bcoco\b/i, "🥥"],
-  [/sanitária|sanitaria/i, "🧴"],
-  [/com gás|com gas/i, "🫧"],
-  [/água|agua/i, "💧"],
-  // padaria
-  [/pão de queijo|pao de queijo/i, "🧀"],
-  [/pão de leite|pao de leite/i, "🥖"],
-  [/pão integral|pao integral/i, "🍞"],
-  [/pão|pao/i, "🍞"],
-  // mercearia / cozinha
-  [/azeite/i, "🫒"],
-  [/óleo|oleo/i, "🛢️"],
-  [/vinagre/i, "🍾"],
-  [/fermento/i, "🧁"],
-  [/tomate pelado/i, "🥫"],
-  [/enlatado|lata/i, "🥫"],
-  [/milho/i, "🌽"],
-  [/macarrão|macarrao|spaghetti|penne/i, "🍝"],
-  [/arroz/i, "🍚"],
-  [/feijão|feijao/i, "🫘"],
-  [/farofa|farinha/i, "🌾"],
-  [/açúcar|acucar/i, "🍬"],
-  [/café|cafe melitta/i, "☕"],
-  [/filtro de papel|filtro/i, "🧻"],
-  [/achocolatado|toddy/i, "🍫"],
-  [/ketchup/i, "🍅"],
-  [/molho/i, "🥫"],
-  [/snack|kalassi/i, "🍿"],
-  // laticínios
-  [/manteiga/i, "🧈"],
-  [/leite condensado/i, "🥫"],
-  [/creme de leite/i, "🥛"],
-  [/leite/i, "🥛"],
-  [/cream cheese|requeijão|requeijao/i, "🧀"],
-  [/parmesão|parmesao|mussarela|polenguinho|queijo/i, "🧀"],
-  [/iogurte/i, "🥣"],
-  // ovos
-  [/ovos|ovo/i, "🥚"],
-  // carnes e frios
-  [/bacon/i, "🥓"],
-  [/linguiça|linguica/i, "🌭"],
-  [/nugget/i, "🍗"],
-  // congelados
-  [/sorbet|açaí|acai/i, "🍨"],
-  [/batata mccain|batata congelada|batata airfryer/i, "🍟"],
-  // frutas
-  [/abacaxi/i, "🍍"],
-  [/banana/i, "🍌"],
-  [/melão|melao/i, "🍈"],
-  [/limão|limao/i, "🍋"],
-  [/pêra|pera/i, "🍐"],
-  [/maçã|maca\b/i, "🍎"],
-  [/uva/i, "🍇"],
-  // verduras e legumes
-  [/abobrinha/i, "🥒"],
-  [/abóbora|abobora/i, "🎃"],
-  [/tomate/i, "🍅"],
-  [/batata/i, "🥔"],
-  [/cebola/i, "🧅"],
-  [/cenoura/i, "🥕"],
-  [/alface/i, "🥬"],
-  [/couve/i, "🥬"],
-  [/brócolis|brocolis/i, "🥦"],
-  [/salsa|cebolinha/i, "🌿"],
-  // limpeza
-  [/ariel/i, "🧺"],
-  [/comfort|amaciante/i, "🌸"],
-  [/detergente/i, "🧴"],
-  [/limpador/i, "🧴"],
-  [/sanitária|sanitaria/i, "🧴"],
-  [/desinfetante/i, "🧴"],
-  [/esponja/i, "🧽"],
-  [/saco de lixo|saco lixo/i, "🗑️"],
-  [/guardanapo/i, "🧻"],
-  [/toalha de papel/i, "🧻"],
-  [/papel higi/i, "🧻"],
-  // higiene pessoal
-  [/creme dental/i, "🪥"],
-  [/sabonete/i, "🧼"],
-  [/shampoo/i, "🧴"],
-  // outros
-  [/repelente/i, "🦟"]
-];
-
-const ICON_BY_CATEGORIA = {
-  "Bebidas - Águas":               "💧",
-  "Bebidas - Refrigerantes e Tônicas":"🥤",
-  "Bebidas - Sucos e Coco":        "🥥",
-  "Padaria":                       "🍞",
-  "Mercearia - Óleos e Vinagres":  "🫒",
-  "Mercearia - Enlatados":         "🥫",
-  "Mercearia - Massas":            "🍝",
-  "Mercearia - Arroz e Feijão":    "🍚",
-  "Mercearia - Farinhas e Açúcar": "🌾",
-  "Mercearia - Café e Achocolatado":"☕",
-  "Mercearia - Molhos e Condimentos":"🍅",
-  "Mercearia - Snacks":            "🍿",
-  "Laticínios - Manteigas":        "🧈",
-  "Laticínios - Leites e Cremes":  "🥛",
-  "Laticínios - Queijos":          "🧀",
-  "Laticínios - Iogurtes":         "🥣",
-  "Ovos":                          "🥚",
-  "Carnes e Frios":                "🥩",
-  "Congelados":                    "❄️",
-  "Frutas":                        "🍎",
-  "Verduras e Legumes":            "🥬",
-  "Limpeza":                       "🧹",
-  "Higiene Pessoal":               "🧼",
-  "Outros":                        "📦"
-};
-
-function getIcon(produto) {
-  for (const [re, icon] of ICON_BY_KEYWORD) {
-    if (re.test(produto.nome)) return icon;
-  }
-  return ICON_BY_CATEGORIA[produto.categoria] || "📦";
-}
-
-// Versão curta de label de categoria pra usar nos chips
-function categoriaShort(cat) {
-  if (cat.startsWith("Bebidas - ")) return cat.replace("Bebidas - ", "");
-  if (cat.startsWith("Mercearia - ")) return cat.replace("Mercearia - ", "");
-  if (cat.startsWith("Laticínios - ")) return cat.replace("Laticínios - ", "");
-  return cat;
-}
-
-// ===================================================================
-// ESTADO
-// ===================================================================
-const STORAGE_KEY = "lista-compras-rascunho-v2";
-let estado = {
-  quantidades: {},        // id -> qty
-  novos: [],              // [{descricao, quantidade, obs}]
-  categoria_ativa: null   // null = todas
-};
-
 function carregarRascunho() {
   try {
     const dados = localStorage.getItem(STORAGE_KEY);
-    if (!dados) return false;
-    const parsed = JSON.parse(dados);
-    if (parsed && parsed.estado) {
-      estado = { ...estado, ...parsed.estado };
-      const data = new Date(parsed.timestamp);
-      document.getElementById("rascunho-info").textContent =
-        `Última edição ${data.toLocaleDateString("pt-BR")} às ${data.toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"})}`;
-      if (Object.values(estado.quantidades).some(q => q > 0) || estado.novos.length > 0) {
-        document.getElementById("banner-rascunho").classList.add("visivel");
-      }
-      return true;
+    if (!dados) return;
+    const { texto, timestamp } = JSON.parse(dados);
+    if (texto && texto.trim()) {
+      $texto.value = texto;
+      $banner.classList.add("visivel");
+      atualizarBotao();
     }
-  } catch(e) { console.warn("Erro ao ler rascunho", e); }
-  return false;
+  } catch (e) {}
 }
-
 function salvarRascunho() {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify({
-      timestamp: new Date().toISOString(),
-      estado
+      texto: $texto.value,
+      timestamp: new Date().toISOString()
     }));
-  } catch(e) {}
+  } catch (e) {}
 }
-
 function limparRascunho() {
-  if (!confirm("Tem certeza que quer apagar a lista inteira?")) return;
-  estado = { quantidades: {}, novos: [], categoria_ativa: null };
+  if (!confirm("Apagar o que tá escrito?")) return;
+  $texto.value = "";
   localStorage.removeItem(STORAGE_KEY);
-  document.getElementById("banner-rascunho").classList.remove("visivel");
-  document.getElementById("menu-dropdown").classList.remove("visivel");
-  renderizar();
+  $banner.classList.remove("visivel");
+  atualizarBotao();
+  $texto.focus();
 }
 
-function zerarQuantidades() {
-  if (!confirm("Zerar todas as quantidades? Os itens novos serão mantidos.")) return;
-  estado.quantidades = {};
-  document.getElementById("menu-dropdown").classList.remove("visivel");
+function atualizarBotao() {
+  $enviarBtn.disabled = $texto.value.trim().length < 2;
+}
+
+$texto.addEventListener("input", () => {
   salvarRascunho();
-  renderizar();
-}
-
-// ===================================================================
-// RENDER
-// ===================================================================
-function renderizar() {
-  const termo = (document.getElementById("busca").value || "").toLowerCase().trim();
-  document.getElementById("search-bar").classList.toggle("has-text", termo.length > 0);
-
-  renderChips();
-
-  const container = document.getElementById("lista-categorias");
-  container.innerHTML = "";
-
-  const matchTermo = (p) =>
-    !termo ||
-    p.nome.toLowerCase().includes(termo) ||
-    p.marca.toLowerCase().includes(termo);
-
-  const matchCategoria = (p) =>
-    !estado.categoria_ativa || p.categoria === estado.categoria_ativa;
-
-  // Seção: itens novos (sempre no topo)
-  if (estado.novos.length > 0) {
-    const sec = document.createElement("section");
-    sec.className = "secao-novos";
-    sec.innerHTML = `
-      <div class="categoria-header">
-        <h2>✨ Itens novos para a primeira compra</h2>
-        <span class="badge">${estado.novos.length}</span>
-      </div>
-      <div id="lista-novos"></div>
-    `;
-    container.appendChild(sec);
-    const lst = sec.querySelector("#lista-novos");
-    estado.novos.forEach((item, idx) => {
-      const div = document.createElement("div");
-      div.className = "item-novo";
-      div.innerHTML = `
-        <div class="icon-avatar">✨</div>
-        <div class="info">
-          <div class="desc">${escapeHtml(item.descricao)}</div>
-          ${item.obs ? `<div class="obs">${escapeHtml(item.obs)}</div>` : ''}
-        </div>
-        <div class="qty-stepper" style="background:var(--md-surface-container);min-width:130px;max-width:130px">
-          <button class="qty-btn" onclick="ajustarNovo(${idx}, -1)" aria-label="Diminuir">
-            <span class="material-symbols-outlined">remove</span>
-          </button>
-          <input type="number" class="qty-input" min="1" value="${item.quantidade}" onchange="setQtdNovo(${idx}, this.value)">
-          <button class="qty-btn" onclick="ajustarNovo(${idx}, 1)" aria-label="Aumentar">
-            <span class="material-symbols-outlined">add</span>
-          </button>
-        </div>
-        <button class="remove-btn" onclick="removerNovo(${idx})" aria-label="Remover">
-          <span class="material-symbols-outlined">delete</span>
-        </button>
-      `;
-      lst.appendChild(div);
-    });
-  }
-
-  // Produtos por categoria
-  let totalEncontrado = 0;
-  CATALOGO.categorias.forEach(cat => {
-    if (estado.categoria_ativa && cat !== estado.categoria_ativa) return;
-    const itens = CATALOGO.produtos.filter(p => p.categoria === cat && matchTermo(p));
-    if (itens.length === 0) return;
-    totalEncontrado += itens.length;
-    const selecionados = itens.filter(p => (estado.quantidades[p.id] || 0) > 0).length;
-
-    const sec = document.createElement("section");
-    sec.className = "categoria";
-    sec.innerHTML = `
-      <div class="categoria-header">
-        <h2>${escapeHtml(cat)}</h2>
-        ${selecionados > 0 ? `<span class="badge">${selecionados}</span>` : ''}
-      </div>
-      <div class="cards-grid"></div>
-    `;
-    const grid = sec.querySelector(".cards-grid");
-    itens.forEach(p => {
-      const qtd = estado.quantidades[p.id] || 0;
-      const card = document.createElement("div");
-      card.className = "card" + (qtd > 0 ? " selecionado" : "");
-      card.innerHTML = `
-        <div class="icon-avatar">${getIcon(p)}</div>
-        <div class="product-brand">${escapeHtml(p.marca)}</div>
-        <div class="product-name">${escapeHtml(p.nome)}</div>
-        <div class="qty-stepper">
-          <button class="qty-btn" onclick="ajustar('${p.id}', -1)" ${qtd === 0 ? 'disabled' : ''} aria-label="Diminuir">
-            <span class="material-symbols-outlined">remove</span>
-          </button>
-          <input type="number" class="qty-input" min="0" value="${qtd}" onchange="setQtd('${p.id}', this.value)">
-          <button class="qty-btn" onclick="ajustar('${p.id}', 1)" aria-label="Aumentar">
-            <span class="material-symbols-outlined">add</span>
-          </button>
-        </div>
-      `;
-      grid.appendChild(card);
-    });
-    container.appendChild(sec);
-  });
-
-  document.getElementById("empty-state").classList.toggle("visivel",
-    totalEncontrado === 0 && estado.novos.length === 0);
-
-  atualizarResumo();
-}
-
-function renderChips() {
-  const row = document.getElementById("chip-row");
-  row.innerHTML = "";
-  const chips = [
-    { key: null, label: "Tudo" },
-    ...CATALOGO.categorias.map(c => ({ key: c, label: categoriaShort(c) }))
-  ];
-  chips.forEach(c => {
-    const ativo = (c.key === estado.categoria_ativa);
-    const btn = document.createElement("button");
-    btn.className = "chip" + (ativo ? " ativo" : "");
-    btn.textContent = c.label;
-    btn.onclick = () => {
-      estado.categoria_ativa = c.key;
-      salvarRascunho();
-      renderizar();
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    };
-    row.appendChild(btn);
-  });
-}
-
-function escapeHtml(s) {
-  return String(s).replace(/[&<>"']/g, c => ({
-    "&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"
-  })[c]);
-}
-
-function atualizarResumo() {
-  let qtdTotal = 0;
-  let tiposDistintos = 0;
-  for (const [id, q] of Object.entries(estado.quantidades)) {
-    if (q > 0) { qtdTotal += q; tiposDistintos++; }
-  }
-  for (const novo of estado.novos) { qtdTotal += novo.quantidade; tiposDistintos++; }
-  document.getElementById("contagem-itens").textContent = qtdTotal;
-  document.getElementById("estimativa-total").textContent =
-    tiposDistintos > 0
-      ? `${tiposDistintos} produto${tiposDistintos>1?"s":""} diferente${tiposDistintos>1?"s":""}`
-      : "monte a sua lista";
-  document.getElementById("gerar-btn").disabled = qtdTotal === 0;
-}
-
-// ===================================================================
-// AÇÕES
-// ===================================================================
-function ajustar(id, delta) {
-  const atual = estado.quantidades[id] || 0;
-  const novo = Math.max(0, atual + delta);
-  if (novo === 0) delete estado.quantidades[id];
-  else estado.quantidades[id] = novo;
-  salvarRascunho();
-  renderizar();
-}
-function setQtd(id, v) {
-  const n = Math.max(0, parseInt(v) || 0);
-  if (n === 0) delete estado.quantidades[id];
-  else estado.quantidades[id] = n;
-  salvarRascunho();
-  renderizar();
-}
-
-function ajustarNovo(idx, delta) {
-  estado.novos[idx].quantidade = Math.max(1, estado.novos[idx].quantidade + delta);
-  salvarRascunho();
-  renderizar();
-}
-function setQtdNovo(idx, v) {
-  estado.novos[idx].quantidade = Math.max(1, parseInt(v) || 1);
-  salvarRascunho();
-  renderizar();
-}
-function removerNovo(idx) {
-  estado.novos.splice(idx, 1);
-  salvarRascunho();
-  renderizar();
-}
-
-function limparBusca() {
-  document.getElementById("busca").value = "";
-  renderizar();
-  document.getElementById("busca").focus();
-}
-
-function abrirModalNovoItem() {
-  document.getElementById("modal-novo").classList.add("visivel");
-  document.getElementById("novo-descricao").value = "";
-  document.getElementById("novo-quantidade").value = "1";
-  document.getElementById("novo-obs").value = "";
-  setTimeout(() => document.getElementById("novo-descricao").focus(), 50);
-}
-function fecharModal() {
-  document.getElementById("modal-novo").classList.remove("visivel");
-}
-function confirmarNovoItem() {
-  const desc = document.getElementById("novo-descricao").value.trim();
-  const qtd = Math.max(1, parseInt(document.getElementById("novo-quantidade").value) || 1);
-  const obs = document.getElementById("novo-obs").value.trim();
-  if (!desc) {
-    mostrarSnackbar("Diz o que você quer comprar :)", "info");
-    return;
-  }
-  estado.novos.push({ descricao: desc, quantidade: qtd, obs });
-  salvarRascunho();
-  fecharModal();
-  renderizar();
-  mostrarSnackbar("Item novo adicionado", "check_circle");
-}
-
-function toggleMenu() {
-  document.getElementById("menu-dropdown").classList.toggle("visivel");
-}
-document.addEventListener("click", (e) => {
-  if (!e.target.closest(".icon-button") && !e.target.closest(".menu-dropdown")) {
-    document.getElementById("menu-dropdown").classList.remove("visivel");
-  }
+  atualizarBotao();
 });
 
-function mostrarSnackbar(msg, icon = "info") {
-  const t = document.getElementById("snackbar");
-  t.innerHTML = `<span class="material-symbols-outlined">${icon}</span><span>${escapeHtml(msg)}</span>`;
-  t.classList.add("visivel");
-  clearTimeout(t._timer);
-  t._timer = setTimeout(() => t.classList.remove("visivel"), 3000);
-}
-
 // ===================================================================
-// ENVIO PRA JSONBIN (Claude lê depois via Master Key)
+// VOZ (Web Speech API)
 // ===================================================================
-const JSONBIN_ACCESS_KEY = "$2a$10$/7komFl12KCkc/RI7.mXL.oEt/KBzhnTFz/6nJIJTjqv/7XJuM6s2";
-const JSONBIN_COLLECTION_ID = "6a0a45c3c0954111d83b04d3";
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+let recognition = null;
+let gravando = false;
+let textoAntesGravacao = "";
 
-function montarPayload() {
-  const itens_conhecidos = Object.entries(estado.quantidades)
-    .filter(([id, q]) => q > 0)
-    .map(([id, q]) => {
-      const p = CATALOGO.produtos.find(p => p.id === id);
-      return {
-        id,
-        nome: p ? p.nome : id,
-        marca: p ? p.marca : null,
-        categoria: p ? p.categoria : null,
-        quantidade: q
-      };
-    });
-  const itens_novos = estado.novos.map(n => ({
-    descricao: n.descricao,
-    quantidade: n.quantidade,
-    observacao: n.obs || ""
-  }));
-  return {
-    gerado_em: new Date().toISOString(),
-    versao: 2,
-    itens_conhecidos,
-    itens_novos
+if (SpeechRecognition) {
+  recognition = new SpeechRecognition();
+  recognition.lang = "pt-BR";
+  recognition.continuous = true;
+  recognition.interimResults = true;
+
+  recognition.onresult = (event) => {
+    let finalText = "";
+    let interimText = "";
+    for (let i = event.resultIndex; i < event.results.length; i++) {
+      const r = event.results[i];
+      if (r.isFinal) finalText += r[0].transcript;
+      else interimText += r[0].transcript;
+    }
+    const base = textoAntesGravacao;
+    $texto.value = (base ? base + "\n" : "") + finalText + interimText;
+    if (finalText) {
+      textoAntesGravacao = $texto.value;
+      salvarRascunho();
+      atualizarBotao();
+    }
   };
+
+  recognition.onerror = (e) => {
+    console.warn("Speech error:", e.error);
+    pararGravacao();
+    if (e.error === "not-allowed" || e.error === "service-not-allowed") {
+      mostrarSnack("Microfone bloqueado. Permite o acesso nas configurações.", "error");
+    } else if (e.error === "no-speech") {
+      mostrarSnack("Não ouvi nada. Tenta de novo.");
+    }
+  };
+
+  recognition.onend = () => {
+    if (gravando) pararGravacao();
+  };
+} else {
+  $mic.classList.add("indisponivel");
 }
 
+function toggleMic() {
+  if (!recognition) return;
+  if (gravando) pararGravacao();
+  else iniciarGravacao();
+}
+function iniciarGravacao() {
+  textoAntesGravacao = $texto.value.trim();
+  gravando = true;
+  $mic.classList.add("gravando");
+  $mic.textContent = "🔴";
+  $gravando.classList.add("visivel");
+  try { recognition.start(); } catch (e) {}
+}
+function pararGravacao() {
+  gravando = false;
+  $mic.classList.remove("gravando");
+  $mic.textContent = "🎤";
+  $gravando.classList.remove("visivel");
+  try { recognition.stop(); } catch (e) {}
+  salvarRascunho();
+  atualizarBotao();
+}
+
+// ===================================================================
+// ENVIO PRA JSONBIN
+// ===================================================================
 async function enviarLista() {
-  const btn = document.getElementById("gerar-btn");
-  const texto = document.getElementById("gerar-btn-texto");
-  const icon = document.getElementById("gerar-btn-icon");
-  const original = { texto: texto.textContent, icon: icon.textContent };
+  const texto = $texto.value.trim();
+  if (!texto) return;
 
-  btn.disabled = true;
-  texto.textContent = "Enviando…";
-  icon.textContent = "progress_activity";
-  icon.style.animation = "spin 1s linear infinite";
+  const original = { texto: $enviarTexto.textContent, icon: $enviarIcon.textContent };
+  $enviarBtn.disabled = true;
+  $enviarTexto.textContent = "Enviando…";
+  $enviarIcon.textContent = "⏳";
+  $enviarIcon.classList.add("spin");
 
-  const payload = montarPayload();
   const dt = new Date();
   const nomeBin = `Lista ${String(dt.getDate()).padStart(2,"0")}-${String(dt.getMonth()+1).padStart(2,"0")} ${String(dt.getHours()).padStart(2,"0")}h${String(dt.getMinutes()).padStart(2,"0")}`;
+  const payload = {
+    gerado_em: dt.toISOString(),
+    versao: 3,
+    formato: "prosa",
+    texto
+  };
 
   try {
     const resp = await fetch("https://api.jsonbin.io/v3/b", {
@@ -1480,74 +487,47 @@ async function enviarLista() {
       body: JSON.stringify(payload)
     });
     if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
-    const data = await resp.json();
-    const binId = data?.metadata?.id || "?";
 
-    icon.style.animation = "";
-    texto.textContent = "Enviada! ✓";
-    icon.textContent = "check_circle";
-    mostrarSnackbar(`Lista enviada! Avisa o Armando 🎉`, "check_circle");
+    $enviarIcon.classList.remove("spin");
+    $enviarTexto.textContent = "Enviada!";
+    $enviarIcon.textContent = "✓";
+    mostrarSnack("Lista enviada! Avisa o Armando 🎉", "success");
 
-    // Reset estado pra próxima lista (mantém a UI mas zera quantidades)
+    // Limpa
     setTimeout(() => {
-      texto.textContent = original.texto;
-      icon.textContent = original.icon;
-      btn.disabled = false;
-    }, 4000);
-
-    // opcional: limpar lista após sucesso
-    if (confirm("Lista enviada! Quer começar uma lista nova agora?")) {
-      estado = { quantidades: {}, novos: [], categoria_ativa: estado.categoria_ativa };
+      $texto.value = "";
       localStorage.removeItem(STORAGE_KEY);
-      document.getElementById("banner-rascunho").classList.remove("visivel");
-      renderizar();
-    }
+      $banner.classList.remove("visivel");
+      $enviarTexto.textContent = original.texto;
+      $enviarIcon.textContent = original.icon;
+      atualizarBotao();
+    }, 2000);
   } catch (e) {
-    console.error("Erro ao enviar:", e);
-    icon.style.animation = "";
-    texto.textContent = "Erro — tente de novo";
-    icon.textContent = "error";
-    mostrarSnackbar("Falha ao enviar. Verifica internet e tenta de novo.", "error");
+    console.error(e);
+    $enviarIcon.classList.remove("spin");
+    $enviarTexto.textContent = "Erro — tente de novo";
+    $enviarIcon.textContent = "⚠️";
+    mostrarSnack("Falha ao enviar. Verifica a internet.", "error");
     setTimeout(() => {
-      texto.textContent = original.texto;
-      icon.textContent = original.icon;
-      btn.disabled = false;
-    }, 3500);
+      $enviarTexto.textContent = original.texto;
+      $enviarIcon.textContent = original.icon;
+      $enviarBtn.disabled = false;
+    }, 3000);
   }
 }
 
-// Mantém função de download local como backup (não é mais o default).
-// A Gabri pode usar o menu ⋯ pra baixar JSON se quiser cópia local.
-function baixarListaLocal() {
-  const lista = montarPayload();
-  const blob = new Blob([JSON.stringify(lista, null, 2)], {type: "application/json"});
-  const url = URL.createObjectURL(blob);
-  const dt = new Date();
-  const ts = `${dt.getFullYear()}${String(dt.getMonth()+1).padStart(2,"0")}${String(dt.getDate()).padStart(2,"0")}-${String(dt.getHours()).padStart(2,"0")}${String(dt.getMinutes()).padStart(2,"0")}`;
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = `lista-${ts}.json`;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
-  mostrarSnackbar("JSON baixado", "download");
-  document.getElementById("menu-dropdown").classList.remove("visivel");
+function mostrarSnack(msg, tipo = "") {
+  $snack.textContent = msg;
+  $snack.className = "snackbar visivel " + tipo;
+  clearTimeout(mostrarSnack._t);
+  mostrarSnack._t = setTimeout(() => $snack.classList.remove("visivel"), 3200);
 }
 
 // ===================================================================
 // INIT
 // ===================================================================
-document.getElementById("busca").addEventListener("input", () => renderizar());
-document.getElementById("modal-novo").addEventListener("click", (e) => {
-  if (e.target.id === "modal-novo") fecharModal();
-});
-document.addEventListener("keydown", (e) => {
-  if (e.key === "Escape") fecharModal();
-});
-
 carregarRascunho();
-renderizar();
+atualizarBotao();
 </script>
 </body>
 </html>

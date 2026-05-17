@@ -1,0 +1,6 @@
+# Repo público — só o HTML que a Gabri usa do celular vai pra GitHub Pages.
+# O restante (catálogo, instruções, histórico, etc.) é interno do projeto.
+
+*
+!.gitignore
+!lista-compras.html

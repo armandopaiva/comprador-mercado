@@ -216,6 +216,72 @@
   .enviar-btn .spin { animation: spin 1s linear infinite; }
   @keyframes spin { to { transform: rotate(360deg); } }
 
+  /* Overlay de sucesso GRANDE no meio da tela */
+  .sucesso-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 24px;
+    padding: 24px;
+    z-index: 300;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+    pointer-events: none;
+  }
+  .sucesso-overlay.visivel {
+    display: flex;
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .sucesso-overlay .check-circle {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    background: var(--md-primary);
+    color: white;
+    display: grid;
+    place-items: center;
+    font-size: 84px;
+    line-height: 1;
+    animation: pop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-shadow: 0 8px 32px rgba(74, 104, 69, 0.32);
+  }
+  .sucesso-overlay .titulo {
+    font-size: 32px;
+    font-weight: 600;
+    color: var(--md-on-surface);
+    text-align: center;
+    line-height: 1.2;
+    animation: slideUp 0.4s ease;
+  }
+  .sucesso-overlay .subtitulo {
+    font-size: 17px;
+    color: var(--md-on-surface-variant);
+    text-align: center;
+    margin-top: -12px;
+    animation: slideUp 0.5s ease;
+  }
+  @keyframes pop {
+    0%   { transform: scale(0); }
+    60%  { transform: scale(1.15); }
+    100% { transform: scale(1); }
+  }
+  @keyframes slideUp {
+    from { transform: translateY(12px); opacity: 0; }
+    to   { transform: translateY(0); opacity: 1; }
+  }
+  @media (max-width: 480px) {
+    .sucesso-overlay .check-circle { width: 110px; height: 110px; font-size: 66px; }
+    .sucesso-overlay .titulo { font-size: 26px; }
+    .sucesso-overlay .subtitulo { font-size: 15px; }
+  }
+
   /* Rascunho banner */
   .banner {
     background: var(--md-tertiary-container);
@@ -319,12 +385,18 @@ azeite andorinha
 
 <footer>
   <button class="enviar-btn" id="enviar-btn" onclick="enviarLista()" disabled>
-    <span id="enviar-texto">Enviar pra Armando</span>
+    <span id="enviar-texto">Enviar pro Claude</span>
     <span id="enviar-icon">📤</span>
   </button>
 </footer>
 
 <div class="snackbar" id="snackbar"></div>
+
+<div class="sucesso-overlay" id="sucesso-overlay">
+  <div class="check-circle">✓</div>
+  <div class="titulo">Lista enviada<br>pro Claude! 🎉</div>
+  <div class="subtitulo">Pode fechar aqui</div>
+</div>
 
 <script>
 const JSONBIN_ACCESS_KEY = "$2a$10$/7komFl12KCkc/RI7.mXL.oEt/KBzhnTFz/6nJIJTjqv/7XJuM6s2";
@@ -491,7 +563,13 @@ async function enviarLista() {
     $enviarIcon.classList.remove("spin");
     $enviarTexto.textContent = "Enviada!";
     $enviarIcon.textContent = "✓";
-    mostrarSnack("Lista enviada! Avisa o Armando 🎉", "success");
+
+    // Overlay grande de sucesso no meio da tela
+    const $sucesso = document.getElementById("sucesso-overlay");
+    $sucesso.classList.add("visivel");
+    setTimeout(() => $sucesso.classList.remove("visivel"), 3500);
+    // Permite fechar tocando no overlay
+    $sucesso.onclick = () => $sucesso.classList.remove("visivel");
 
     // Limpa
     setTimeout(() => {

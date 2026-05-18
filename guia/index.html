@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#386569">
+<title>Lista de Compras — Guia</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* Paleta azul-petróleo (diferenciar do projeto 1 que é verde) */
+    --md-primary:                #386569;
+    --md-on-primary:             #ffffff;
+    --md-primary-container:      #bcebef;
+    --md-on-primary-container:   #002022;
+    --md-secondary:              #4a6266;
+    --md-tertiary-container:     #ffdcc2;
+    --md-on-tertiary-container:  #2b1700;
+    --md-error:                  #ba1a1a;
+    --md-error-container:        #ffdad6;
+    --md-surface:                #f4fafb;
+    --md-on-surface:             #171d1e;
+    --md-on-surface-variant:     #3f484a;
+    --md-surface-container-lowest:#ffffff;
+    --md-surface-container-low:  #eef4f5;
+    --md-surface-container:      #e8eef0;
+    --md-surface-container-high: #e2e8ea;
+    --md-outline:                #6f797b;
+    --md-outline-variant:        #bfc8ca;
+    --md-shape-sm: 8px;
+    --md-shape-md: 12px;
+    --md-shape-lg: 16px;
+    --md-shape-xl: 28px;
+    --md-shape-full: 9999px;
+    --md-elev-1: 0 1px 2px rgba(0,0,0,0.05), 0 1px 3px rgba(0,0,0,0.10);
+    --md-elev-2: 0 1px 2px rgba(0,0,0,0.06), 0 2px 6px rgba(0,0,0,0.12);
+    --md-elev-3: 0 4px 8px rgba(0,0,0,0.10), 0 1px 3px rgba(0,0,0,0.06);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--md-surface);
+    color: var(--md-on-surface);
+    line-height: 1.4;
+    -webkit-font-smoothing: antialiased;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  /* App bar */
+  .app-bar {
+    background: var(--md-surface);
+    padding: 18px 16px 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .app-bar .icon {
+    width: 44px; height: 44px;
+    border-radius: var(--md-shape-full);
+    display: grid; place-items: center;
+    background: var(--md-primary-container);
+    color: var(--md-on-primary-container);
+    font-size: 22px;
+  }
+  .app-bar h1 {
+    font-size: 22px;
+    font-weight: 500;
+    flex: 1;
+  }
+
+  /* Main: textarea ocupa o resto */
+  main {
+    flex: 1;
+    padding: 16px 16px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-width: 720px;
+    width: 100%;
+    margin: 0 auto;
+  }
+  .hint {
+    font-size: 14px;
+    color: var(--md-on-surface-variant);
+    line-height: 1.45;
+  }
+  .hint strong { color: var(--md-on-surface); font-weight: 500; }
+
+  .editor-wrap {
+    position: relative;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 280px;
+  }
+  textarea {
+    flex: 1;
+    width: 100%;
+    background: var(--md-surface-container-low);
+    border: 2px solid transparent;
+    border-radius: var(--md-shape-lg);
+    padding: 16px 60px 16px 16px;
+    font-family: inherit;
+    font-size: 17px;
+    line-height: 1.55;
+    color: var(--md-on-surface);
+    resize: none;
+    outline: none;
+    transition: border-color 0.15s, background 0.15s;
+    min-height: 280px;
+  }
+  textarea:focus {
+    background: var(--md-surface-container-lowest);
+    border-color: var(--md-primary);
+  }
+  textarea::placeholder {
+    color: var(--md-on-surface-variant);
+    opacity: 0.7;
+    white-space: pre-line;
+  }
+
+  /* Mic button (overlay no canto do textarea) */
+  .mic-btn {
+    position: absolute;
+    right: 12px;
+    top: 12px;
+    width: 44px;
+    height: 44px;
+    border-radius: var(--md-shape-full);
+    border: none;
+    background: var(--md-primary-container);
+    color: var(--md-on-primary-container);
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    font-size: 22px;
+    transition: background 0.15s, transform 0.1s;
+    box-shadow: var(--md-elev-1);
+  }
+  .mic-btn:hover { background: #bce5b1; }
+  .mic-btn:active { transform: scale(0.94); }
+  .mic-btn.gravando {
+    background: var(--md-error);
+    color: #fff;
+    animation: pulse 1.2s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(186,26,26,0.55); }
+    50%      { box-shadow: 0 0 0 12px rgba(186,26,26,0.0); }
+  }
+  .mic-btn.indisponivel { display: none; }
+
+  /* Estado de gravação — feedback acima do textarea */
+  .gravando-info {
+    display: none;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 10px;
+    background: var(--md-error-container);
+    color: var(--md-error);
+    border-radius: var(--md-shape-sm);
+    font-size: 13px;
+    font-weight: 500;
+    width: fit-content;
+  }
+  .gravando-info.visivel { display: inline-flex; }
+  .gravando-info::before {
+    content: "";
+    width: 8px; height: 8px;
+    border-radius: var(--md-shape-full);
+    background: var(--md-error);
+    animation: blink 1s infinite;
+  }
+  @keyframes blink { 50% { opacity: 0.3; } }
+
+  /* Footer com botão enviar */
+  footer {
+    padding: 12px 16px 18px;
+    background: var(--md-surface);
+    display: flex;
+    justify-content: center;
+    border-top: 1px solid var(--md-outline-variant);
+  }
+  .enviar-btn {
+    width: 100%;
+    max-width: 360px;
+    height: 56px;
+    background: var(--md-primary);
+    color: var(--md-on-primary);
+    border: none;
+    border-radius: var(--md-shape-full);
+    font-family: inherit;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: background 0.15s, box-shadow 0.15s;
+    box-shadow: var(--md-elev-1);
+  }
+  .enviar-btn:hover { background: #3e5b39; box-shadow: var(--md-elev-2); }
+  .enviar-btn:active { background: #355031; }
+  .enviar-btn:disabled {
+    background: rgba(25,29,23,0.12);
+    color: rgba(25,29,23,0.38);
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+  .enviar-btn .spin { animation: spin 1s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Overlay de sucesso GRANDE no meio da tela */
+  .sucesso-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 24px;
+    padding: 24px;
+    z-index: 300;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+    pointer-events: none;
+  }
+  .sucesso-overlay.visivel {
+    display: flex;
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .sucesso-overlay .check-circle {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    background: var(--md-primary);
+    color: white;
+    display: grid;
+    place-items: center;
+    font-size: 84px;
+    line-height: 1;
+    animation: pop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-shadow: 0 8px 32px rgba(74, 104, 69, 0.32);
+  }
+  .sucesso-overlay .titulo {
+    font-size: 32px;
+    font-weight: 600;
+    color: var(--md-on-surface);
+    text-align: center;
+    line-height: 1.2;
+    animation: slideUp 0.4s ease;
+  }
+  .sucesso-overlay .subtitulo {
+    font-size: 17px;
+    color: var(--md-on-surface-variant);
+    text-align: center;
+    margin-top: -12px;
+    animation: slideUp 0.5s ease;
+  }
+  @keyframes pop {
+    0%   { transform: scale(0); }
+    60%  { transform: scale(1.15); }
+    100% { transform: scale(1); }
+  }
+  @keyframes slideUp {
+    from { transform: translateY(12px); opacity: 0; }
+    to   { transform: translateY(0); opacity: 1; }
+  }
+  @media (max-width: 480px) {
+    .sucesso-overlay .check-circle { width: 110px; height: 110px; font-size: 66px; }
+    .sucesso-overlay .titulo { font-size: 26px; }
+    .sucesso-overlay .subtitulo { font-size: 15px; }
+  }
+
+  /* Rascunho banner */
+  .banner {
+    background: var(--md-tertiary-container);
+    color: var(--md-on-tertiary-container);
+    border-radius: var(--md-shape-md);
+    padding: 10px 12px;
+    font-size: 13px;
+    display: none;
+    align-items: center;
+    gap: 8px;
+    justify-content: space-between;
+  }
+  .banner.visivel { display: flex; }
+  .banner button {
+    background: transparent;
+    border: none;
+    color: var(--md-on-tertiary-container);
+    font-family: inherit;
+    font-weight: 500;
+    font-size: 13px;
+    padding: 4px 8px;
+    border-radius: var(--md-shape-full);
+    cursor: pointer;
+    text-decoration: underline;
+  }
+
+  /* Snackbar */
+  .snackbar {
+    position: fixed;
+    bottom: calc(80px + env(safe-area-inset-bottom));
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: #2a3127;
+    color: #f1f1ec;
+    padding: 12px 18px;
+    border-radius: var(--md-shape-sm);
+    font-size: 14px;
+    box-shadow: var(--md-elev-3);
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.25s;
+    z-index: 200;
+    max-width: calc(100% - 32px);
+  }
+  .snackbar.visivel {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+  .snackbar.success { background: #1f3d20; }
+  .snackbar.error { background: #7a1a1a; }
+
+  /* Mobile tweaks */
+  @media (max-width: 480px) {
+    .app-bar { padding: 14px 14px 6px; }
+    .app-bar h1 { font-size: 18px; }
+    .app-bar .icon { width: 40px; height: 40px; font-size: 20px; }
+    main { padding: 12px 12px 8px; gap: 10px; }
+    textarea { font-size: 16px; padding: 14px 56px 14px 14px; min-height: 240px; }
+    .hint { font-size: 13px; }
+    footer { padding: 10px 12px 14px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="app-bar">
+  <div class="icon">📋</div>
+  <h1>Lista de Compras — Guia</h1>
+</header>
+
+<main>
+  <div class="banner" id="banner-rascunho">
+    <span>📝 Rascunho salvo automaticamente</span>
+    <button onclick="limparRascunho()">Apagar</button>
+  </div>
+
+  <p class="hint">
+    <strong>Diz pra mim do que você precisa.</strong> Eu te mando uma guia no WhatsApp dizendo onde compra cada coisa pelo melhor preço. Você compra à mão. Pode escrever em uma linha só ou separado. Marca, quantidade, observação — eu entendo. Se quiser, toca no microfone e fala.
+  </p>
+
+  <div class="gravando-info" id="gravando-info">Ouvindo… fala normal</div>
+
+  <div class="editor-wrap">
+    <textarea
+      id="texto"
+      autocomplete="off"
+      autocapitalize="sentences"
+      placeholder="Ex:
+6 cocas zero 1,5l
+sabão ariel
+amaciante comfort
+2 papéis higiênico
+um pão de forma pullman
+bananas, umas 800g
+azeite andorinha
+3 caixas de leite ninho"
+    ></textarea>
+    <button class="mic-btn" id="mic-btn" onclick="toggleMic()" aria-label="Falar a lista">🎤</button>
+  </div>
+</main>
+
+<footer>
+  <button class="enviar-btn" id="enviar-btn" onclick="enviarLista()" disabled>
+    <span id="enviar-texto">Enviar pro Claude</span>
+    <span id="enviar-icon">📤</span>
+  </button>
+</footer>
+
+<div class="snackbar" id="snackbar"></div>
+
+<div class="sucesso-overlay" id="sucesso-overlay">
+  <div class="check-circle">✓</div>
+  <div class="titulo">Lista enviada! 🎉</div>
+  <div class="subtitulo">Daqui a pouco te mando a guia no WhatsApp</div>
+</div>
+
+<script>
+const JSONBIN_ACCESS_KEY = "$2a$10$/7komFl12KCkc/RI7.mXL.oEt/KBzhnTFz/6nJIJTjqv/7XJuM6s2";
+const JSONBIN_COLLECTION_ID = "6a0a45c3c0954111d83b04d3";
+const STORAGE_KEY = "lista-compras-rascunho-guia-v3";
+
+const $texto = document.getElementById("texto");
+const $enviarBtn = document.getElementById("enviar-btn");
+const $enviarTexto = document.getElementById("enviar-texto");
+const $enviarIcon = document.getElementById("enviar-icon");
+const $banner = document.getElementById("banner-rascunho");
+const $mic = document.getElementById("mic-btn");
+const $gravando = document.getElementById("gravando-info");
+const $snack = document.getElementById("snackbar");
+
+// ===================================================================
+// RASCUNHO (localStorage)
+// ===================================================================
+function carregarRascunho() {
+  try {
+    const dados = localStorage.getItem(STORAGE_KEY);
+    if (!dados) return;
+    const { texto, timestamp } = JSON.parse(dados);
+    if (texto && texto.trim()) {
+      $texto.value = texto;
+      $banner.classList.add("visivel");
+      atualizarBotao();
+    }
+  } catch (e) {}
+}
+function salvarRascunho() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({
+      texto: $texto.value,
+      timestamp: new Date().toISOString()
+    }));
+  } catch (e) {}
+}
+function limparRascunho() {
+  if (!confirm("Apagar o que tá escrito?")) return;
+  $texto.value = "";
+  localStorage.removeItem(STORAGE_KEY);
+  $banner.classList.remove("visivel");
+  atualizarBotao();
+  $texto.focus();
+}
+
+function atualizarBotao() {
+  $enviarBtn.disabled = $texto.value.trim().length < 2;
+}
+
+$texto.addEventListener("input", () => {
+  salvarRascunho();
+  atualizarBotao();
+});
+
+// ===================================================================
+// VOZ (Web Speech API)
+// ===================================================================
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+let recognition = null;
+let gravando = false;
+let textoAntesGravacao = "";
+
+if (SpeechRecognition) {
+  recognition = new SpeechRecognition();
+  recognition.lang = "pt-BR";
+  recognition.continuous = true;
+  recognition.interimResults = true;
+
+  recognition.onresult = (event) => {
+    let finalText = "";
+    let interimText = "";
+    for (let i = event.resultIndex; i < event.results.length; i++) {
+      const r = event.results[i];
+      if (r.isFinal) finalText += r[0].transcript;
+      else interimText += r[0].transcript;
+    }
+    const base = textoAntesGravacao;
+    $texto.value = (base ? base + "\n" : "") + finalText + interimText;
+    if (finalText) {
+      textoAntesGravacao = $texto.value;
+      salvarRascunho();
+      atualizarBotao();
+    }
+  };
+
+  recognition.onerror = (e) => {
+    console.warn("Speech error:", e.error);
+    pararGravacao();
+    if (e.error === "not-allowed" || e.error === "service-not-allowed") {
+      mostrarSnack("Microfone bloqueado. Permite o acesso nas configurações.", "error");
+    } else if (e.error === "no-speech") {
+      mostrarSnack("Não ouvi nada. Tenta de novo.");
+    }
+  };
+
+  recognition.onend = () => {
+    if (gravando) pararGravacao();
+  };
+} else {
+  $mic.classList.add("indisponivel");
+}
+
+function toggleMic() {
+  if (!recognition) return;
+  if (gravando) pararGravacao();
+  else iniciarGravacao();
+}
+function iniciarGravacao() {
+  textoAntesGravacao = $texto.value.trim();
+  gravando = true;
+  $mic.classList.add("gravando");
+  $mic.textContent = "🔴";
+  $gravando.classList.add("visivel");
+  try { recognition.start(); } catch (e) {}
+}
+function pararGravacao() {
+  gravando = false;
+  $mic.classList.remove("gravando");
+  $mic.textContent = "🎤";
+  $gravando.classList.remove("visivel");
+  try { recognition.stop(); } catch (e) {}
+  salvarRascunho();
+  atualizarBotao();
+}
+
+// ===================================================================
+// ENVIO PRA JSONBIN
+// ===================================================================
+async function enviarLista() {
+  const texto = $texto.value.trim();
+  if (!texto) return;
+
+  const original = { texto: $enviarTexto.textContent, icon: $enviarIcon.textContent };
+  $enviarBtn.disabled = true;
+  $enviarTexto.textContent = "Enviando…";
+  $enviarIcon.textContent = "⏳";
+  $enviarIcon.classList.add("spin");
+
+  const dt = new Date();
+  const nomeBin = `Lista ${String(dt.getDate()).padStart(2,"0")}-${String(dt.getMonth()+1).padStart(2,"0")} ${String(dt.getHours()).padStart(2,"0")}h${String(dt.getMinutes()).padStart(2,"0")}`;
+  const payload = {
+    gerado_em: dt.toISOString(),
+    versao: 3,
+    formato: "prosa",
+    modo: "guia",
+    texto
+  };
+
+  try {
+    const resp = await fetch("https://api.jsonbin.io/v3/b", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Access-Key": JSONBIN_ACCESS_KEY,
+        "X-Collection-Id": JSONBIN_COLLECTION_ID,
+        "X-Bin-Name": nomeBin,
+        "X-Bin-Private": "true"
+      },
+      body: JSON.stringify(payload)
+    });
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+
+    $enviarIcon.classList.remove("spin");
+    $enviarTexto.textContent = "Enviada!";
+    $enviarIcon.textContent = "✓";
+
+    // Overlay grande de sucesso no meio da tela
+    const $sucesso = document.getElementById("sucesso-overlay");
+    $sucesso.classList.add("visivel");
+    setTimeout(() => $sucesso.classList.remove("visivel"), 3500);
+    // Permite fechar tocando no overlay
+    $sucesso.onclick = () => $sucesso.classList.remove("visivel");
+
+    // Limpa
+    setTimeout(() => {
+      $texto.value = "";
+      localStorage.removeItem(STORAGE_KEY);
+      $banner.classList.remove("visivel");
+      $enviarTexto.textContent = original.texto;
+      $enviarIcon.textContent = original.icon;
+      atualizarBotao();
+    }, 2000);
+  } catch (e) {
+    console.error(e);
+    $enviarIcon.classList.remove("spin");
+    $enviarTexto.textContent = "Erro — tente de novo";
+    $enviarIcon.textContent = "⚠️";
+    mostrarSnack("Falha ao enviar. Verifica a internet.", "error");
+    setTimeout(() => {
+      $enviarTexto.textContent = original.texto;
+      $enviarIcon.textContent = original.icon;
+      $enviarBtn.disabled = false;
+    }, 3000);
+  }
+}
+
+function mostrarSnack(msg, tipo = "") {
+  $snack.textContent = msg;
+  $snack.className = "snackbar visivel " + tipo;
+  clearTimeout(mostrarSnack._t);
+  mostrarSnack._t = setTimeout(() => $snack.classList.remove("visivel"), 3200);
+}
+
+// ===================================================================
+// INIT
+// ===================================================================
+carregarRascunho();
+atualizarBotao();
+</script>
+</body>
+</html>
